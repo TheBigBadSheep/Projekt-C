@@ -1,3 +1,6 @@
+import PouchDB from 'pouchdb';
+const LOCAL_TASKS = new PouchDB('tasks')
+
 export const state = () => ({
     items: [],
     filter: 'all',
@@ -75,8 +78,28 @@ export const getters = {
 
 
 export const actions = {
-    addItem ({commit},item){
-        commit('ADD_ITEM', item)
+    async addItem ({commit, dispatch}, item){
+        try{
+            const addedItem = await LOCAL_TASKS.put({
+                _id: new Date().getTime().toString(),
+                text: item,
+                isChecked: false
+            })
+            dispatch('fetchItems')
+            commit('ADD_ITEM', item)
+        }
+        catch(error){
+            console.log(error)
+        }
+    },
+
+    async fetchItems({commit}){
+        try {
+            const docs = await LOCAL_TASKS.allDocs({ include_docs: true })
+            console.log(docs)
+        } catch (error) {
+            console.log(error)
+        }
     },
 
     removeItem({commit}, id){
