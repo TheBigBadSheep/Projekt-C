@@ -13,7 +13,7 @@
         :key="item.id"
         :item="item"
         @onCheckedNiklas="(id) => markAsCheckedNiklas(id)"
-        class=""/>
+        class="px-3"/>
     </transition-group>  
 
     <ToDoFooter :items="items"/>

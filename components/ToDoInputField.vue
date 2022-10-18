@@ -3,7 +3,7 @@
         <div class="flex">
             <input
                 v-model="item"
-                class="w-full text-2xl px-8 shadow-inner bg-white py-3 border-2 rounded-lg bg-white border-ToDo-DarkGreen placeholder-gray-500 text-gray-900 italic-font focus:outline-none
+                class="w-full text-2xl px-2 sm:px-8 shadow-inner bg-white py-3 border-2 rounded-lg bg-white border-ToDo-DarkGreen placeholder-gray-500 text-gray-900 italic-font focus:outline-none
                 sm:text-2xl sm:py-2"
                 type="text"
                 placeholder="What needs to be done?"

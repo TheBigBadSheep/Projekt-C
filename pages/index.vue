@@ -7,8 +7,8 @@
       </svg>
       <span class="h-10 mt-9">DO</span>
     </div>
-    <div class="z-10 absolute flex flex-col w-full">
-      <div class="w-5/6 lg:w-1/2 place-self-center">
+    <div class="z-10 fixed flex flex-col w-full">
+      <div class="w-11/12 lg:w-1/2 sm:place-self-center">
       <ToDoList class="mt-28"></ToDoList>
     </div>
     </div>
