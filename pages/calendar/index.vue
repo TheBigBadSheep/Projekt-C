@@ -8,7 +8,7 @@
           <button id="jumpBack" @click="jumpToCurrentMonthDate" class="p-4 font-medium"> Check</button>
         </div>
       </header>
-      <div class="calendar">
+    <!--  <div class="calendar">
         <ul class="weeks">
           <li>Sun</li>
           <li>Mon</li>
@@ -19,10 +19,14 @@
           <li>Sat</li>
         </ul>
         <NuxtLink :to="'/calendar/' + urlSlug">
-          <ul class="days">
-        </ul>
+          <ul class="days"></ul>
         </NuxtLink>  
-      </div>
+        <ul @click="printmything(3)" class="days"></ul>
+        <div v-for="index in calendarDays">{{index}}</div>
+      </div> -->
+    <div v-for="index in daysInMonth">
+      {{index}}
+    </div>
     </div>
   </template>
   
@@ -42,6 +46,8 @@
           months: ["January", "February", "March", "April", "May", "June", "July",
               "August", "September", "October", "November", "December"],
           urlSlug: null,
+          calendarDays: null,
+          daysInMonth: null
 
         }
       },
@@ -52,11 +58,16 @@
   
       methods: {
         renderCalendar () {
+
+          // JS -> didnt work out as I wanted TODO: Remake with vue
+          ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+          /*
           let firstDayofMonth = new Date(this.currentYear, this.currentMonth, 1).getDay(), // getting first day of month
             lastDateofMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate(), // getting last date of month
             lastDayofMonth = new Date(this.currentYear, this.currentMonth, lastDateofMonth).getDay(), // getting last day of month
             lastDateofLastMonth = new Date(this.currentYear, this.currentMonth, 0).getDate(); // getting last date of previous month
             let liTag = "";
+            let tagli 
 
             for (let i = firstDayofMonth; i > 0; i--) { // creating li of previous month last days
                 liTag += `<li class="inactive">${lastDateofLastMonth - i + 1}</li>`;
@@ -74,7 +85,16 @@
             }
             this.currentDate.innerText = `${this.months[this.currentMonth]} ${this.currentYear}`; // passing current mon and yr as currentDate text
             this.calendarDays.innerHTML = liTag;
-            this.selectedDate = this.calendarDays
+           // console.log(this.calendarDays)
+           */
+           /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+           let x
+           if ( this.currentMonth === 4 || 6 || 9 || 11) x = 30
+           if ( this.currentMonth === 1 || 3 || 5 || 7 || 8 || 10 || 12) x = 31
+           if ( this.currentMonth === 2 ) x = 28
+           this.daysInMonth = x
+           console.log(x)
+           
         },
         changeMonthLeft(){
           if (this.currentMonth === 0) {
@@ -87,9 +107,10 @@
           }
         },
         changeMonthRight(){
-          if (this.currentMonth === 11) {
-            this.currentMonth = 0
+          if (this.currentMonth ) {
+            this.currentMonth += 1
             this.currentYear += 1
+            console.log(this.currentMonth)
             this.renderCalendar()
           }else{
             this.currentMonth +=  1
@@ -100,21 +121,35 @@
           this.currentMonth = this.savedDate[1]
           this.currentYear = this.savedDate[2]
           this.renderCalendar()
+        },
+        printmything(x){
+          
         }
       },
       mounted(){
-        this.calendarDays = document.querySelector(".days"),
-        this.currentDate = document.querySelector(".current-date"),
+      //  this.calendarDays = document.querySelector(".days"),
+      //  this.currentDate = document.querySelector(".current-date"),
 
         this.date = new Date()
-        this.currentYear = this.date.getFullYear()
-        this.currentMonth = this.date.getMonth()
+      //  this.currentYear = this.date.getFullYear()
+      //  this.currentMonth = this.date.getMonth()
 
         this.renderCalendar()
-        const currentDay = document.getElementsByClassName('active')[0].innerHTML
-        this.savedDate = [currentDay, this.currentMonth, this.currentYear]      //Saving day aswell as month/year to use in the router link
-        this.urlSlug = currentDay + '-' + (this.currentMonth + 1)
-        console.log(this.urlSlug)
+      //  const currentDay = document.getElementsByClassName('active')[0].innerHTML
+      //  this.savedDate = [currentDay, this.currentMonth, this.currentYear]      //Saving day aswell as month/year to use in the router link
+      //  this.urlSlug = currentDay + '-' + (this.currentMonth + 1)
+
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        this.currentMonth = mm
+        this.currentYear = yyyy
+        this.currentDay = dd
+
+        today = dd + '/' + mm + '/' + yyyy;
+        console.log(today)
         },
   
     }
