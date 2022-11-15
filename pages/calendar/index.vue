@@ -1,6 +1,6 @@
 <template>
-    <div class="flex justify-center h-screen bg-ToDo-Green">     
-      <header>
+    <div class=" bg-ToDo-Green">     
+      <header class="flex justify-center ">
         <p class="current-date"></p>
         <div class="flex">
           <button id="prev" @click="changeMonthLeft" class="p-4 font-medium">Left</button>
@@ -24,9 +24,15 @@
         <ul @click="printmything(3)" class="days"></ul>
         <div v-for="index in calendarDays">{{index}}</div>
       </div> -->
-    <div v-for="index in daysInMonth">
-      {{index}}
-    </div>
+      <div class="grid grid-cols-7 space-x-5">
+        <div v-for="index in monthy" class="text-center">
+          <NuxtLink :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear">
+            <div class="py-5 hover:bg-green-100 rounded-lg" :class="index === currentDay ? 'bg-blue-500' : ''">
+              {{index}}
+            </div>
+          </NuxtLink>
+        </div>
+      </div>
     </div>
   </template>
   
@@ -41,6 +47,7 @@
           currentDate: null,
           currentYear: null,
           currentMonth: null,
+          currentDay: null,
           selectedDate: null,
           savedDate: null,
           months: ["January", "February", "March", "April", "May", "June", "July",
@@ -53,7 +60,9 @@
       },
   
       computed: {
-  
+        monthy(){
+          return this.daysInMonth
+        }
       },
   
       methods: {
@@ -89,31 +98,35 @@
            */
            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
            let x
-           if ( this.currentMonth === 4 || 6 || 9 || 11) x = 30
-           if ( this.currentMonth === 1 || 3 || 5 || 7 || 8 || 10 || 12) x = 31
+           if ( this.currentMonth === 4 || this.currentMonth === 6 || this.currentMonth === 9 || this.currentMonth === 11) {
+            x = 30
+          }else{
+            x = 31
+          }
+           //if ( this.currentMonth === 1 || 3 || 5 || 7 || 8 || 10 || 12) x = 31
            if ( this.currentMonth === 2 ) x = 28
            this.daysInMonth = x
-           console.log(x)
-           
         },
         changeMonthLeft(){
           if (this.currentMonth === 0) {
-            this.currentMonth = 11
+            this.currentMonth = 12
             this.currentYear -= 1
             this.renderCalendar()
           }else{
             this.currentMonth -=  1
+            console.log(this.currentMonth)
             this.renderCalendar()
           }
         },
         changeMonthRight(){
-          if (this.currentMonth ) {
-            this.currentMonth += 1
+          if (this.currentMonth === 12 ) {
+            this.currentMonth = 1
             this.currentYear += 1
             console.log(this.currentMonth)
             this.renderCalendar()
           }else{
             this.currentMonth +=  1
+            console.log(this.currentMonth)
             this.renderCalendar()
           }
         },
@@ -134,14 +147,13 @@
       //  this.currentYear = this.date.getFullYear()
       //  this.currentMonth = this.date.getMonth()
 
-        this.renderCalendar()
       //  const currentDay = document.getElementsByClassName('active')[0].innerHTML
       //  this.savedDate = [currentDay, this.currentMonth, this.currentYear]      //Saving day aswell as month/year to use in the router link
       //  this.urlSlug = currentDay + '-' + (this.currentMonth + 1)
 
         var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1 //January is 0!
         var yyyy = today.getFullYear();
 
         this.currentMonth = mm
@@ -149,6 +161,8 @@
         this.currentDay = dd
 
         today = dd + '/' + mm + '/' + yyyy;
+
+        this.renderCalendar()
         console.log(today)
         },
   
