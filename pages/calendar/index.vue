@@ -2,10 +2,11 @@
     <div class=" bg-ToDo-Green">     
       <header class="flex justify-center ">
         <p class="current-date"></p>
-        <div class="flex">
-          <button id="prev" @click="changeMonthLeft" class="p-4 font-medium">Left</button>
-          <button id="next" @click="changeMonthRight" class="p-4 font-medium">Right</button>
-          <button id="jumpBack" @click="jumpToCurrentMonthDate" class="p-4 font-medium"> Check</button>
+        <div class="flex p-4 font-medium">
+          <button id="prev" @click="changeMonthLeft" class="p-4">Left</button>
+          <button id="next" @click="changeMonthRight" class="p-4">Right</button>
+          <button id="jumpBack" @click="jumpToCurrentMonthDate" class="p-4"> Check</button>
+          <div class="p-4"> {{currentYear}} </div>
         </div>
       </header>
     <!--  <div class="calendar">
@@ -27,7 +28,7 @@
       <div class="grid grid-cols-7 space-x-5">
         <div v-for="index in monthy" class="text-center">
           <NuxtLink :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear">
-            <div class="py-5 hover:bg-green-100 rounded-lg" :class="index === currentDay ? 'bg-blue-500' : ''">
+            <div class="py-5 hover:bg-green-100 rounded-lg" :class="(index === currentDay && currentYear === savedDate[2] && currentMonth === savedDate[1]) ? 'bg-blue-500' : ''">
               {{index}}
             </div>
           </NuxtLink>
@@ -52,7 +53,6 @@
           savedDate: null,
           months: ["January", "February", "March", "April", "May", "June", "July",
               "August", "September", "October", "November", "December"],
-          urlSlug: null,
           calendarDays: null,
           daysInMonth: null
 
@@ -162,6 +162,7 @@
 
         today = dd + '/' + mm + '/' + yyyy;
 
+        this.savedDate = [dd,mm,yyyy]
         this.renderCalendar()
         console.log(today)
         },
