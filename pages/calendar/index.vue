@@ -27,7 +27,7 @@
       </div> -->
       <div class="grid grid-cols-7 space-x-5">
         <div v-for="index in monthy" class="text-center">
-          <NuxtLink :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear">
+          <NuxtLink :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear" @click="saveDateInStore(index + '-' + currentMonth + '-' + currentYear)">
             <div class="py-5 hover:bg-green-100 rounded-lg" :class="(index === currentDay && currentYear === savedDate[2] && currentMonth === savedDate[1]) ? 'bg-blue-500' : ''">
               {{index}}
             </div>
@@ -135,8 +135,8 @@
           this.currentYear = this.savedDate[2]
           this.renderCalendar()
         },
-        printmything(x){
-          
+        saveDateInStore(x){
+          this.$store.dispatch('addDate', this.item)
         }
       },
       mounted(){
