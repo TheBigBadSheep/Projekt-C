@@ -42,8 +42,14 @@ export default {
 
     methods: {
         addItem(){
-            this.$store.dispatch('addItem', this.item)
-            this.item = ''
+            if(this.item.length > 0){
+                const task = {
+                    text: this.item,
+                    isCompleted: false
+                }
+                this.$store.dispatch('addItem', task)
+                this.item = ''
+            }
         },
         checkAll(){
             this.$store.dispatch('checkAllToDos')

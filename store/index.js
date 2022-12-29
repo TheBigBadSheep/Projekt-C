@@ -2,128 +2,257 @@ import PouchDB from 'pouchdb';
 const LOCAL_TASKS = new PouchDB('tasks')
 
 export const state = () => ({
-    items: [],
-    filter: 'all',
-  })
+  taskInput: null,
+  items: [],
+  filter: 'all',
+  filteredTasks: [],
+  editMode: false
+})
 
 export const mutations = {
-    ADD_ITEM (state, item){
-        if(item.length > 0){
-            state.items.push({
-                id: Math.floor(Math.random() * 1000),
-                name: item,
-                isChecked: false,
-            });
-        }
-    },
+  ADD_ITEM(state, item) {
+    state.items.push(item)
+  },
 
-    CHANGE_FILTER(state, filter){
-        state.filter = filter
-    },
+  CLEAR_COMPLETED(state) {
+    state.items = state.items.filter(item => !item.isChecked)
+  },
 
-    MARK_AS_CHECKED(state, id){
-        const index = state.items.findIndex( item => item.id === id )
-          if(index === -1) return;
+  MARK_AS_CHECKED(state, checkedTask) {
+    const foundTask = state.tasks.find(task => {
+      return task === checkedTask
+    })
+    foundTask.isCompleted = !foundTask.isCompleted
+  },
 
-          if(!state.items[index].isChecked){
-            const item = state.items[index];
-            item.isChecked = true;
-            state.items.splice(index, 1, item)
-          }else{
-            const item = state.items[index];
-            item.isChecked = false;
-            state.items.splice(index, 1, item)
-          }
-    },
-
-    REMOVE_ITEM(state, id){
-        const index = state.items.findIndex( item => item.id === id )
-        state.items.splice(index, 1)
-    },
-
-    EDIT_TODO(state, payload){
-        const index = state.items.findIndex( item => item.id === payload.id )
-        const item = { ...state.items[index] };
-        item.name = payload.inputValue;
-        state.items.splice(index, 1, item)
-    },
-
-    CHECK_ALL(state){
-        const allChecked = !state.items.every(item => item.isChecked)
-        state.items = state.items.map(item => {
-            item.isChecked = allChecked
-            return item
-        });
-    },
-
-    CLEAR_COMPLETED(state){
-        state.items = state.items.filter(item => !item.isChecked)
+  CHECK_ALL(state, isChecked) {
+    if (isChecked) {
+      state.tasks.forEach(task => {
+        if (!task.isCompleted) task.isCompleted = true
+      })
     }
-}
-
-
-export const getters = {
-    showCheckBox: (state) => state.items.length > 0,
-    allChecked: (state) =>  state.items.every(item => item.isChecked),
-    filteredItems: (state) => {
-        if (state.filter === 'all'){
-            return state.items
-          }else if(state.filter === 'active'){
-            return state.items.filter(item => !item.isChecked)
-          }else if(state.filter === 'completed'){
-            return state.items.filter(item => item.isChecked)
-          }
+    else {
+      state.tasks.forEach(task => {
+        if (task.isCompleted) task.isCompleted = false
+      })
     }
-}
+  },
 
+  SET_TASK_INPUT(state, task) {
+    state.taskInput = task
+  },
+
+  CHANGE_FILTER(state, filter) {
+    state.filter = filter
+
+    switch (filter) {
+      case 'active':
+        state.filteredTasks = state.items.filter(item => !item.isChecked)
+        break
+
+      case 'completed':
+        state.filteredTasks = state.items.filter(item => item.isChecked)
+        break
+
+      default:
+        state.filteredTasks = state.items
+    }
+
+    console.log(state.filteredTasks)
+
+  },
+
+  SET_EDIT_MODE(state, value) {
+    state.editMode = value
+  },
+
+  SET_TASK_TEXT(state, value) {
+    const foundTask = state.tasks.find(task => {
+      return task.isEditing === true
+    })
+    foundTask.task = value
+  },
+
+  SET_TASKS(state, tasks) {
+    state.items = tasks
+  }
+}
 
 export const actions = {
-    async addItem ({commit, dispatch}, item){
-        try{
-            const addedItem = await LOCAL_TASKS.put({
-                _id: new Date().getTime().toString(),
-                text: item,
-                isChecked: false
-            })
-            dispatch('fetchItems')
-            commit('ADD_ITEM', item)
-        }
-        catch(error){
-            console.log(error)
-        }
-    },
+  async addItem({ commit, dispatch }, task) {
+    try {
+      const newTask = {
+        _id: new Date().getTime().toString(),
+        ...task
+      }
+      await LOCAL_TASKS.put(newTask)
+      commit('ADD_ITEM', task)
+      dispatch('fetchItems')
+    }
+    catch (error) {
+      console.log(error)
+    }
+  },
 
-    async fetchItems({commit}){
-        try {
-            const docs = await LOCAL_TASKS.allDocs({ include_docs: true })
-            console.log(docs)
-        } catch (error) {
-            console.log(error)
-        }
-    },
+  async fetchItems({ commit }) {
+    try {
+      console.log("fetching ...")
+      const docs = await LOCAL_TASKS.allDocs({ include_docs: true })
 
-    removeItem({commit}, id){
-        commit('REMOVE_ITEM', id)
-    },
+      commit("SET_TASKS", docs.rows.map(row => row.doc))
+    } catch (error) {
+      console.log(error)
+    }
+  },
 
-    changeFilter({commit}, filter){
-        commit('CHANGE_FILTER', filter)
-    },
+  async removeTask({ dispatch }, task) {
+    try {
 
-    markAsChecked({commit}, id){
-        commit('MARK_AS_CHECKED', id)
-    },
+      await LOCAL_TASKS.remove(task)
+      dispatch('fetchItems')
 
-    editToDo({commit}, payload){
-        commit('EDIT_TODO', payload)
-    },
+    } catch (error) {
+      console.log(error)
+    }
+  },
 
-    checkAllToDos({commit}){
-        commit('CHECK_ALL')
-    },
+  async clearCompletedTasks({ commit }, task) {
+    try {
+      const result = await LOCAL_TASKS.allDocs({ include_docs: true })
 
-    clearCompleted({commit}){
-        commit('CLEAR_COMPLETED')
-    },
+      const promises = result.rows.filter(row => row.doc.isCompleted).map(row => LOCAL_TASKS.remove(row.doc))
+
+      await Promise.all(promises)
+      commit('CLEAR_COMPLETED', task)
+    }
+    catch (e) {
+      console.log(e)
+    }
+  },
+
+  async checkTask({ dispatch }, id) {
+    try {
+      const task = await LOCAL_TASKS.get(id)
+
+      const response = await LOCAL_TASKS.put({
+        _id: id,
+        _rev: task._rev,
+        text: task.text,
+        isChecked: !task.isChecked
+      })
+
+      dispatch('fetchItems')
+    }
+    catch (e) {
+      console.log(e)
+      return
+    }
+  },
+
+  async toggleAllTasks({ commit }, checked) {
+    try {
+      const result = await LOCAL_TASKS.allDocs({ include_docs: true })
+
+      if (checked) {
+        const promises = result.rows.filter(row => !row.doc.isCompleted).map(row => {
+          row.doc.isCompleted = !row.doc.isCompleted
+          LOCAL_TASKS.put(row.doc)
+        })
+
+        await Promise.all(promises)
+      }
+
+      else {
+        const promises = result.rows.filter(row => row.doc.isCompleted).map(row => {
+          row.doc.isCompleted = !row.doc.isCompleted
+          LOCAL_TASKS.put(row.doc)
+        })
+
+        await Promise.all(promises)
+      }
+
+      commit('CHECK_ALL', checked)
+
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  setTaskInput({ commit }, task) {
+    commit('SET_TASK_INPUT'.task)
+  },
+
+  changeFilter({ commit }, filter) {
+    commit('CHANGE_FILTER', filter)
+  },
+
+  async setTaskText({ commit }, text) {
+    try {
+      commit('SET_TASK_TEXT', text)
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  async updateTask({ dispatch }, task) {
+    try {
+      const response = await LOCAL_TASKS.put(task)
+
+      dispatch('fetchItems')
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+}
+
+export const getters = {
+  getTaskInput: (state) => state.taskInput,
+
+  getTasks: (state) => state.items,
+
+  filteredItems: (state) => {
+    if (state.filter === 'all') {
+      return state.items
+    } else if (state.filter === 'active') {
+      return state.items.filter(item => !item.isChecked)
+    } else if (state.filter === 'completed') {
+      return state.items.filter(item => item.isChecked)
+    }
+  },
+
+  getCompletedTasks: state => {
+    const completedTasks = []
+    state.tasks.filter(task => {
+      if (task.isCompleted) {
+        completedTasks.push(task)
+      }
+    });
+    return completedTasks
+  },
+
+  getActiveTasks: state => {
+    const activeTasks = []
+    state.tasks.filter(task => {
+      if (!task.isCompleted) {
+        activeTasks.push(task)
+      }
+    });
+    return activeTasks
+  },
+
+  getFilterContent: state => state.filter,
+
+  getEditMode: state => state.editMode,
+
+  getTaskText: state => {
+    for (const task of state.tasks) {
+      if (task.isEditing === true) return task.task
+    }
+  },
+
+  showCheckBox: (state) => state.items.length > 0,
+
+  allChecked: (state) => state.items.every(item => item.isChecked),
 
 }

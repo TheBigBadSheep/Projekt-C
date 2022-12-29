@@ -5,18 +5,21 @@
       :show-check-box="showCheckBox"
       :all-checked="allChecked"
       class=""/>
-    
 
-    <transition-group name="list">
+
+    <!--transition-group name="list"-->
       <ToDoListItem
         v-for="(item) in itemsFiltered"
         :key="item.id"
         :item="item"
         @onCheckedNiklas="(id) => markAsCheckedNiklas(id)"
         class="px-3"/>
-    </transition-group>  
+    <!--/transition-group-->
 
-    <ToDoFooter :items="items"/>
+    <ToDoFooter
+      @changedFilter="test"
+      :items="items"
+    />
   </div>
 </template>
 
@@ -29,12 +32,17 @@ import ToDoFooter from "./ToDoFooter.vue"
 
 export default {
 
+    mounted(){
+      this.$store.dispatch('fetchItems')
+    },
+
     components: {
       ToDoInputField, ToDoListItem, ToDoFooter,
     },
 
     data() {
       return {
+        tasks: []
       }
     },
 
@@ -62,6 +70,10 @@ export default {
     },
 
     methods: {
+        test(){
+          this.tasks = this.$store.getters.filteredTasks
+        },
+
         markAsCheckedNiklas(id){
           const index = this.items.findIndex( item => item.id === id )
           if(index === -1) return;
