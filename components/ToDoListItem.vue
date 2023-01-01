@@ -19,7 +19,7 @@
             @change="updateTask"
         >
         
-        <div class="absolute h-8 w-8 inset-y-0 right-2 opacity-0 hover:opacity-100 transition ease-out duration-100 cursor-pointer">
+        <div class="absolute h-8 w-8 inset-y-0 right-6 opacity-0 hover:opacity-100 transition ease-out duration-100 cursor-pointer">
             <img src="../assets/deleteButton.svg" class="h-8 w-8 mt-3 " @click="removeTask">
         </div>
 

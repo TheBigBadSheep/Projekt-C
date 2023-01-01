@@ -149,13 +149,13 @@ export const actions = {
     }
   },
 
-  async toggleAllTasks({ commit }, checked) {
+  async toggleAllTasks({ dispatch }, checked) {
     try {
       const result = await LOCAL_TASKS.allDocs({ include_docs: true })
 
       if (checked) {
-        const promises = result.rows.filter(row => !row.doc.isCompleted).map(row => {
-          row.doc.isCompleted = !row.doc.isCompleted
+        const promises = result.rows.filter(row => !row.doc.isChecked).map(row => {
+          row.doc.isChecked = !row.doc.isChecked
           LOCAL_TASKS.put(row.doc)
         })
 
@@ -163,15 +163,21 @@ export const actions = {
       }
 
       else {
-        const promises = result.rows.filter(row => row.doc.isCompleted).map(row => {
-          row.doc.isCompleted = !row.doc.isCompleted
+        const promises = result.rows.filter(row => row.doc.isChecked).map(row => {
+          row.doc.isChecked = !row.doc.isChecked
           LOCAL_TASKS.put(row.doc)
         })
 
         await Promise.all(promises)
       }
 
-      commit('CHECK_ALL', checked)
+
+
+
+
+      dispatch('fetchItems')
+
+      //commit('CHECK_ALL', checked)
 
     } catch (e) {
       console.log(e)

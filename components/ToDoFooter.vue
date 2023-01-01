@@ -14,17 +14,17 @@
                     <div class="w-full flex justify-center gap-4 -mt-0.5 pl-14 lg:ml-0">
                         <button
                             class="text-xs sm:text-sm rounded-lg px-2 border-2 border-transparent opacity-80 transition ease-in-out duration-200"
-                            :class="{active: filter == 'all', 'border-ToDo-LightGreen border-opacity-20s shadow-sm': filter == 'all' }"
+                            :class="filter == 'all' ? 'border-ToDo-LightGreen border-opacity-20s shadow-sm' : ''"
                             @click="changeFilter('all')"> All
                         </button>
                         <button
                             class="text-xs sm:text-sm rounded-lg px-2 border-2 border-transparent opacity-80 transition ease-in-out duration-200"
-                            :class="{active: filter == 'all', 'border-ToDo-LightGreen border-opacity-20s shadow-sm': filter == 'active' }"
+                            :class="filter == 'active' ? 'border-ToDo-LightGreen border-opacity-20s shadow-sm' : ''"
                             @click="changeFilter('active')"> Active
                         </button>
                         <button
                             class="text-xs sm:text-sm rounded-lg px-2 border-2 border-transparent opacity-80 transition ease-in-out duration-200"
-                            :class="{active: filter == 'all', 'border-ToDo-LightGreen border-opacity-20s shadow-sm': filter == 'completed' }"
+                            :class="filter == 'completed' ? 'border-ToDo-LightGreen border-opacity-20s shadow-sm' : ''"
                             @click="changeFilter('completed')"> Completed
                         </button>
                     </div>
@@ -57,6 +57,7 @@ export default {
     data() {
         return {
             filter: 'all',
+            allChecked: false
         }
     },
 
@@ -74,6 +75,7 @@ export default {
     },
     methods: {
         changeFilter(filter){
+            this.filter = filter
             this.$store.dispatch('changeFilter', filter)
             this.$emit('changedFilter')
         },
@@ -83,7 +85,8 @@ export default {
         },
 
         toggleAllTasks(){
-            this.$store.dispatch('toggleAllTasks')
+            this.allChecked = !this.allChecked
+            this.$store.dispatch('toggleAllTasks', this.allChecked)
         }
     }
 }
