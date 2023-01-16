@@ -4,6 +4,7 @@
     <ToDoInputField
       :show-check-box="showCheckBox"
       :all-checked="allChecked"
+      @taskAdded="test()"
       class=""/>
 
 
@@ -12,12 +13,13 @@
         v-for="(item) in filteredTasks"
         :key="item._id"
         :item="item"
+        @onChanged="test()"
         @onCheckedNiklas="(id) => markAsCheckedNiklas(id)"
         class="px-3"/>
     <!--/transition-group-->
 
     <ToDoFooter
-      @changedFilter="(filter) => test(filter)"
+      @changedFilter="test()"
       :items="items"
     />
   </div>
@@ -69,9 +71,9 @@ export default {
           return this.$store.getters.showCheckBox
         },
 
-         allChecked(){
-          return this.$store.getters.allChecked
-         },
+        allChecked(){
+        return this.$store.getters.allChecked
+        },
 
         items(){
           return this.$store.state.items
@@ -96,8 +98,9 @@ export default {
     },
 
     methods: {
-        test(filter){
-          console.log(filter)
+        test(){
+          const filter = this.$store.state.filter;
+
           if(filter === 'all'){
             this.tasks = this.$store.state.items
             return
@@ -112,8 +115,6 @@ export default {
             this.tasks = this.completedTasks
             return
           }
-
-          console.log(this.tasks)
         },
 
         markAsCheckedNiklas(id){

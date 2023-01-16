@@ -8,7 +8,8 @@ export const state = () => ({
   filter: 'all',
   activeTasks: [],
   completedTasks: [],
-  editMode: false
+  editMode: false,
+  filteredTasks: []
 })
 
 export const mutations = {
@@ -177,8 +178,8 @@ export const actions = {
 
   async changeFilter({ commit, dispatch }, filter) {
     try {
-      dispatch('fetchItems')
       commit('CHANGE_FILTER', filter)
+      dispatch('fetchItems')
     } catch (e) {
       console.log(e)
     }
@@ -200,7 +201,9 @@ export const actions = {
     } catch (e) {
       console.log(e)
     }
-  }
+  },
+
+
 
 }
 

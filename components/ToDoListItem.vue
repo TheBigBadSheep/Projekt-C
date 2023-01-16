@@ -44,9 +44,11 @@ export default {
     methods: {
         checkTask() {
             this.$store.dispatch('checkTask', this.item._id)
+            this.emitChange()
         },
         removeTask() {
             this.$store.dispatch('removeTask', this.item)
+            this.emitChange()
         },
         updateTask(){
             const task = {
@@ -56,6 +58,11 @@ export default {
                 isChecked: this.item.isChecked
             }
             this.$store.dispatch('updateTask', task)
+            this.emitChange()
+        },
+        emitChange(){
+            console.log("emit change")
+            this.$emit('onChanged')
         }
 
     }

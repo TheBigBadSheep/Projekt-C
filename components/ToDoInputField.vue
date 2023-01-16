@@ -50,6 +50,7 @@ export default {
                 this.$store.dispatch('addItem', task)
                 this.item = ''
             }
+            this.$emit('taskAdded')
         },
         checkAll(){
             this.$store.dispatch('checkAllToDos')
