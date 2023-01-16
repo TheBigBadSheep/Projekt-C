@@ -1,11 +1,13 @@
 import PouchDB from 'pouchdb';
+import Vue from 'vue';
 const LOCAL_TASKS = new PouchDB('tasks')
 
 export const state = () => ({
   taskInput: null,
   items: [],
   filter: 'all',
-  filteredTasks: [],
+  activeTasks: [],
+  completedTasks: [],
   editMode: false
 })
 
@@ -25,19 +27,6 @@ export const mutations = {
     foundTask.isCompleted = !foundTask.isCompleted
   },
 
-  CHECK_ALL(state, isChecked) {
-    if (isChecked) {
-      state.tasks.forEach(task => {
-        if (!task.isCompleted) task.isCompleted = true
-      })
-    }
-    else {
-      state.tasks.forEach(task => {
-        if (task.isCompleted) task.isCompleted = false
-      })
-    }
-  },
-
   SET_TASK_INPUT(state, task) {
     state.taskInput = task
   },
@@ -45,21 +34,16 @@ export const mutations = {
   CHANGE_FILTER(state, filter) {
     state.filter = filter
 
-    switch (filter) {
+    switch (state.filter) {
       case 'active':
-        state.filteredTasks = state.items.filter(item => !item.isChecked)
-        break
-
+        state.activeTasks = state.items.filter(item => !item.isChecked)
+        console.log(state.activeTasks)
       case 'completed':
-        state.filteredTasks = state.items.filter(item => item.isChecked)
-        break
-
+        state.completedTasks = state.items.filter(item => item.isChecked)
+        console.log(state.completedTasks)
       default:
-        state.filteredTasks = state.items
+        return
     }
-
-    console.log(state.filteredTasks)
-
   },
 
   SET_EDIT_MODE(state, value) {
@@ -74,7 +58,8 @@ export const mutations = {
   },
 
   SET_TASKS(state, tasks) {
-    state.items = tasks
+    Vue.set(state, "items", tasks)
+    //state.items = tasks
   }
 }
 
@@ -116,14 +101,15 @@ export const actions = {
     }
   },
 
-  async clearCompletedTasks({ commit }, task) {
+  async clearCompleted({ dispatch }) {
     try {
       const result = await LOCAL_TASKS.allDocs({ include_docs: true })
 
-      const promises = result.rows.filter(row => row.doc.isCompleted).map(row => LOCAL_TASKS.remove(row.doc))
+      const promises = result.rows.filter(row => row.doc.isChecked).map(row => LOCAL_TASKS.remove(row.doc))
 
       await Promise.all(promises)
-      commit('CLEAR_COMPLETED', task)
+
+      dispatch('fetchItems')
     }
     catch (e) {
       console.log(e)
@@ -171,10 +157,6 @@ export const actions = {
         await Promise.all(promises)
       }
 
-
-
-
-
       dispatch('fetchItems')
 
       //commit('CHECK_ALL', checked)
@@ -188,8 +170,13 @@ export const actions = {
     commit('SET_TASK_INPUT'.task)
   },
 
-  changeFilter({ commit }, filter) {
-    commit('CHANGE_FILTER', filter)
+  async changeFilter({ commit, dispatch }, filter) {
+    try {
+      dispatch('fetchItems')
+      commit('CHANGE_FILTER', filter)
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   async setTaskText({ commit }, text) {
@@ -215,15 +202,16 @@ export const actions = {
 export const getters = {
   getTaskInput: (state) => state.taskInput,
 
-  getTasks: (state) => state.items,
+  tasks: (state) => state.items,
 
   filteredItems: (state) => {
-    if (state.filter === 'all') {
-      return state.items
-    } else if (state.filter === 'active') {
-      return state.items.filter(item => !item.isChecked)
-    } else if (state.filter === 'completed') {
-      return state.items.filter(item => item.isChecked)
+    switch (state.filter) {
+      case 'active':
+        return state.items.filter(item => !item.isChecked)
+      case 'completed':
+        return state.items.filter(item => item.isChecked)
+      default:
+        return state.items
     }
   },
 
@@ -261,4 +249,6 @@ export const getters = {
 
   allChecked: (state) => state.items.every(item => item.isChecked),
 
+  getActiveTasksa: (state) => state.activeTasks,
+  getCompletedTasksa: (state) => state.completedTasks,
 }

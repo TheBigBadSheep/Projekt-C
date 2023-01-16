@@ -57,7 +57,7 @@ export default {
     data() {
         return {
             filter: 'all',
-            allChecked: false
+            areAllChecked: false
         }
     },
 
@@ -77,7 +77,7 @@ export default {
         changeFilter(filter){
             this.filter = filter
             this.$store.dispatch('changeFilter', filter)
-            this.$emit('changedFilter')
+            this.$emit('changedFilter', filter)
         },
 
         clearCompleted(){
@@ -85,8 +85,8 @@ export default {
         },
 
         toggleAllTasks(){
-            this.allChecked = !this.allChecked
-            this.$store.dispatch('toggleAllTasks', this.allChecked)
+            this.areAllChecked = !this.areAllChecked
+            this.$store.dispatch('toggleAllTasks', this.areAllChecked)
         }
     }
 }

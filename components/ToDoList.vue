@@ -9,15 +9,15 @@
 
     <!--transition-group name="list"-->
       <ToDoListItem
-        v-for="(item) in itemsFiltered"
-        :key="item.id"
+        v-for="(item) in tasks"
+        :key="item._id"
         :item="item"
         @onCheckedNiklas="(id) => markAsCheckedNiklas(id)"
         class="px-3"/>
     <!--/transition-group-->
 
     <ToDoFooter
-      @changedFilter="test"
+      @changedFilter="(filter) => test(filter)"
       :items="items"
     />
   </div>
@@ -34,6 +34,7 @@ export default {
 
     mounted(){
       this.$store.dispatch('fetchItems')
+      this.tasks = this.$store.getters.tasks
     },
 
     components: {
@@ -50,6 +51,18 @@ export default {
 
         itemsFiltered(){
           return this.$store.getters.filteredItems
+        },
+
+        allTasks(){
+          return this.$store.getters.tasks
+        },
+
+        activeTasks(){
+          return this.$store.getters.getActiveTasksa
+        },
+
+        completedTasks(){
+          return this.$store.getters.getCompletedTasksa
         },
 
         showCheckBox(){
@@ -70,8 +83,24 @@ export default {
     },
 
     methods: {
-        test(){
-          this.tasks = this.$store.getters.filteredTasks
+        test(filter){
+          console.log(filter)
+          if(filter === 'all'){
+            this.tasks = this.$store.state.items
+            return
+          }
+
+          if(filter === 'active'){
+            this.tasks = this.activeTasks
+            return
+          }
+
+          if(filter === 'completed'){
+            this.tasks = this.completedTasks
+            return
+          }
+
+          console.log(this.tasks)
         },
 
         markAsCheckedNiklas(id){
