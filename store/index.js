@@ -58,8 +58,8 @@ export const mutations = {
   },
 
   SET_TASKS(state, tasks) {
-    Vue.set(state, "items", tasks)
-    //state.items = tasks
+    //Vue.set(state, "items", tasks)
+    state.items = tasks
   }
 }
 
@@ -81,10 +81,10 @@ export const actions = {
 
   async fetchItems({ commit }) {
     try {
-      console.log("fetching ...")
       const docs = await LOCAL_TASKS.allDocs({ include_docs: true })
 
       commit("SET_TASKS", docs.rows.map(row => row.doc))
+      console.log("DOCS: ", docs.rows.map(row => row.doc))
     } catch (error) {
       console.log(error)
     }
@@ -116,7 +116,7 @@ export const actions = {
     }
   },
 
-  async checkTask({ dispatch }, id) {
+  async checkTask({ state, commit, dispatch }, id) {
     try {
       const task = await LOCAL_TASKS.get(id)
 
@@ -127,7 +127,12 @@ export const actions = {
         isChecked: !task.isChecked
       })
 
+
+
+
       dispatch('fetchItems')
+      console.log(state.items)
+
     }
     catch (e) {
       console.log(e)
@@ -218,7 +223,7 @@ export const getters = {
   getCompletedTasks: state => {
     const completedTasks = []
     state.tasks.filter(task => {
-      if (task.isCompleted) {
+      if (task.isChecked) {
         completedTasks.push(task)
       }
     });
@@ -228,7 +233,7 @@ export const getters = {
   getActiveTasks: state => {
     const activeTasks = []
     state.tasks.filter(task => {
-      if (!task.isCompleted) {
+      if (!task.isChecked) {
         activeTasks.push(task)
       }
     });

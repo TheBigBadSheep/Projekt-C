@@ -9,7 +9,7 @@
 
     <!--transition-group name="list"-->
       <ToDoListItem
-        v-for="(item) in tasks"
+        v-for="(item) in filteredTasks"
         :key="item._id"
         :item="item"
         @onCheckedNiklas="(id) => markAsCheckedNiklas(id)"
@@ -79,7 +79,20 @@ export default {
 
         filter(){
           return this.$store.state.filter
-        }
+        },
+
+        filteredTasks(){
+          const filter = this.$store.state.filter
+
+          switch (filter) {
+            case 'active':
+              return this.$store.state.items.filter(item => !item.isChecked)
+            case 'completed':
+              return this.$store.state.items.filter(item => item.isChecked)
+            default:
+              return this.$store.state.items
+          }
+        },
     },
 
     methods: {

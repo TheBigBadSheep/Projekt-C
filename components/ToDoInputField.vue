@@ -45,7 +45,7 @@ export default {
             if(this.item.length > 0){
                 const task = {
                     text: this.item,
-                    isCompleted: false
+                    isChecked: false
                 }
                 this.$store.dispatch('addItem', task)
                 this.item = ''

@@ -23,7 +23,7 @@
             <img src="../assets/deleteButton.svg" class="h-8 w-8 mt-3 " @click="removeTask">
         </div>
 
-        </div>
+    </div>
 
 </template>
 
