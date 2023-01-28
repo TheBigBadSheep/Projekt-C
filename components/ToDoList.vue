@@ -5,18 +5,19 @@
       :show-check-box="showCheckBox"
       :all-checked="allChecked"
       class=""/>
+
+
+      <div>
+        <transition-group name="list">
+          <ToDoListItem
+            v-for="(item) in filteredTasks"
+            :key="item._id"
+            :item="item"
+            class="px-3"/>
+        </transition-group>
     
-
-    <transition-group name="list">
-      <ToDoListItem
-        v-for="(item) in itemsFiltered"
-        :key="item.id"
-        :item="item"
-        @onCheckedNiklas="(id) => markAsCheckedNiklas(id)"
-        class="px-3"/>
-    </transition-group>  
-
-    <ToDoFooter :items="items"/>
+        <ToDoFooter :items="items"/>
+      </div>
   </div>
 </template>
 
@@ -29,50 +30,43 @@ import ToDoFooter from "./ToDoFooter.vue"
 
 export default {
 
-    components: {
-      ToDoInputField, ToDoListItem, ToDoFooter,
+    beforeMount(){
+      this.$store.dispatch('fetchItems')
+      this.tasks = this.$store.getters.tasks
     },
 
-    data() {
-      return {
+  components: {
+    ToDoInputField, ToDoListItem, ToDoFooter,
+  },
+
+  computed: {
+
+    showCheckBox(){
+      return this.$store.getters.showCheckBox
+    },
+
+    allChecked(){
+      return this.$store.getters.allChecked
+    },
+
+    items(){
+      return this.$store.state.items
+    },
+
+    filteredTasks(){
+      const filter = this.$store.state.filter
+
+      switch (filter) {
+        case 'active':
+          return this.$store.state.items.filter(item => !item.isChecked)
+        case 'completed':
+          return this.$store.state.items.filter(item => item.isChecked)
+        default:
+          return this.$store.state.items
       }
     },
-
-    computed: {
-
-        itemsFiltered(){
-          return this.$store.getters.filteredItems
-        },
-
-        showCheckBox(){
-          return this.$store.getters.showCheckBox
-        },
-
-         allChecked(){
-          return this.$store.getters.allChecked
-         },
-
-        items(){
-          return this.$store.state.items
-        },
-
-        filter(){
-          return this.$store.state.filter
-        }
-    },
-
-    methods: {
-        markAsCheckedNiklas(id){
-          const index = this.items.findIndex( item => item.id === id )
-          if(index === -1) return;
-          const item = this.items[index];
-          item.isChecked = true;
-          this.items.splice(index, 1, item)
-        },
-
-    },
-
   }
+}
 </script>
 
 <style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-full ">
+  <div class="relative h-full">
     <div class="-z-10 absolute flex justify-center w-full bg-ToDo-Green h-56 -mt-2 text-white text-4xl shadow-inner-xl">
       <span class="h-10 mt-9">T</span>
       <svg xmlns="http://www.w3.org/2000/svg" class="h-10 mt-9 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -7,10 +7,10 @@
       </svg>
       <span class="h-10 mt-9">DO</span>
     </div>
-    <div class="z-10 fixed flex flex-col w-full">
+    <div class="z-10 sticky flex flex-col w-full">
       <div class="w-11/12 lg:w-1/2 sm:place-self-center">
-      <ToDoList class="mt-28"></ToDoList>
-    </div>
+        <ToDoList class="mt-28"></ToDoList>
+      </div>
     </div>
   </div>
 </template>

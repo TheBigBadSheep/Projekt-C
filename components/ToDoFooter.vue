@@ -3,8 +3,8 @@
         <footer v-show="items.length > 0">
             <div class="bg-white h-9 py-1">
                 <div class="flex justify-center pl-6 sm:pl-14 mb-4 disable-select">
-                    <span v-if="!allChecked" @click="checkAll" class="bg-gray-100 text-sm text-gray-400 py-0.5 px-3 rounded-md cursor-pointer hover:text-gray-600 transition ease-in-out duration-200">Check All</span>
-                    <span v-if="allChecked" @click="checkAll" class="bg-gray-100 text-sm text-gray-400 py-0.5 px-3 rounded-md cursor-pointer hover:text-gray-600 transition ease-in-out duration-200">Uncheck All</span>
+                    <span v-if="!allChecked" @click="toggleAllTasks" class="bg-gray-100 text-sm text-gray-400 py-0.5 px-3 rounded-md cursor-pointer hover:text-gray-600 transition ease-in-out duration-200">Check All</span>
+                    <span v-if="allChecked" @click="toggleAllTasks" class="bg-gray-100 text-sm text-gray-400 py-0.5 px-3 rounded-md cursor-pointer hover:text-gray-600 transition ease-in-out duration-200">Uncheck All</span>
                 </div>
                 <div class="relative py-1 pb-10">
                     <div class="flex w-screen justify-center">
@@ -14,18 +14,18 @@
                     <div class="w-full flex justify-center gap-4 -mt-0.5 pl-14 lg:ml-0">
                         <button
                             class="text-xs sm:text-sm rounded-lg px-2 border-2 border-transparent opacity-80 transition ease-in-out duration-200"
-                            :class="{active: filter == 'all', 'border-ToDo-LightGreen border-opacity-20s shadow-sm': filter == 'all' }"
-                            @click="onChangeFilter" @focus="filter='all'"> All
+                            :class="filter == 'all' ? 'border-ToDo-LightGreen border-opacity-20s shadow-sm' : ''"
+                            @click="changeFilter('all')"> All
                         </button>
                         <button
                             class="text-xs sm:text-sm rounded-lg px-2 border-2 border-transparent opacity-80 transition ease-in-out duration-200"
-                            :class="{active: filter == 'all', 'border-ToDo-LightGreen border-opacity-20s shadow-sm': filter == 'active' }"
-                            @click="onChangeFilter" @focus="filter='active'"> Active
+                            :class="filter == 'active' ? 'border-ToDo-LightGreen border-opacity-20s shadow-sm' : ''"
+                            @click="changeFilter('active')"> Active
                         </button>
                         <button
                             class="text-xs sm:text-sm rounded-lg px-2 border-2 border-transparent opacity-80 transition ease-in-out duration-200"
-                            :class="{active: filter == 'all', 'border-ToDo-LightGreen border-opacity-20s shadow-sm': filter == 'completed' }"
-                            @click="onChangeFilter" @focus="filter='completed'"> Completed
+                            :class="filter == 'completed' ? 'border-ToDo-LightGreen border-opacity-20s shadow-sm' : ''"
+                            @click="changeFilter('completed')"> Completed
                         </button>
                     </div>
                     <div class="py-1">
@@ -57,6 +57,7 @@ export default {
     data() {
         return {
             filter: 'all',
+            areAllChecked: false
         }
     },
 
@@ -73,16 +74,19 @@ export default {
         },
     },
     methods: {
-        onChangeFilter(){
-            this.$store.dispatch('changeFilter', this.filter)
+        changeFilter(filter){
+            this.filter = filter
+            this.$store.dispatch('changeFilter', filter)
+            this.$emit('changedFilter', filter)
         },
 
         clearCompleted(){
             this.$store.dispatch('clearCompleted')
         },
 
-        checkAll(){
-            this.$store.dispatch('checkAllToDos')
+        toggleAllTasks(){
+            this.areAllChecked = !this.areAllChecked
+            this.$store.dispatch('toggleAllTasks', this.areAllChecked)
         }
     }
 }

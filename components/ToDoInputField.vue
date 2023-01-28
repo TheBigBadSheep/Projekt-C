@@ -42,8 +42,15 @@ export default {
 
     methods: {
         addItem(){
-            this.$store.dispatch('addItem', this.item)
-            this.item = ''
+            if(this.item.length > 0){
+                const task = {
+                    text: this.item,
+                    isChecked: false
+                }
+                this.$store.dispatch('addItem', task)
+                this.item = ''
+            }
+            this.$emit('taskAdded')
         },
         checkAll(){
             this.$store.dispatch('checkAllToDos')
