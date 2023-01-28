@@ -61,7 +61,6 @@ export default {
             this.emitChange()
         },
         emitChange(){
-            console.log("emit change")
             this.$emit('onChanged')
         }
 

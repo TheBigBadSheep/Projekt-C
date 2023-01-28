@@ -1,15 +1,11 @@
 import PouchDB from 'pouchdb';
-import Vue from 'vue';
 const LOCAL_TASKS = new PouchDB('tasks')
 
 export const state = () => ({
   taskInput: null,
   items: [],
   filter: 'all',
-  activeTasks: [],
-  completedTasks: [],
-  editMode: false,
-  filteredTasks: []
+  editMode: false
 })
 
 export const mutations = {
@@ -17,49 +13,11 @@ export const mutations = {
     state.items.push(item)
   },
 
-  CLEAR_COMPLETED(state) {
-    state.items = state.items.filter(item => !item.isChecked)
-  },
-
-  MARK_AS_CHECKED(state, checkedTask) {
-    const foundTask = state.tasks.find(task => {
-      return task === checkedTask
-    })
-    foundTask.isCompleted = !foundTask.isCompleted
-  },
-
-  SET_TASK_INPUT(state, task) {
-    state.taskInput = task
-  },
-
   CHANGE_FILTER(state, filter) {
     state.filter = filter
-
-    switch (state.filter) {
-      case 'active':
-        state.activeTasks = state.items.filter(item => !item.isChecked)
-        console.log(state.activeTasks)
-      case 'completed':
-        state.completedTasks = state.items.filter(item => item.isChecked)
-        console.log(state.completedTasks)
-      default:
-        return
-    }
-  },
-
-  SET_EDIT_MODE(state, value) {
-    state.editMode = value
-  },
-
-  SET_TASK_TEXT(state, value) {
-    const foundTask = state.tasks.find(task => {
-      return task.isEditing === true
-    })
-    foundTask.task = value
   },
 
   SET_TASKS(state, tasks) {
-    //Vue.set(state, "items", tasks)
     state.items = tasks
   }
 }
@@ -85,7 +43,6 @@ export const actions = {
       const docs = await LOCAL_TASKS.allDocs({ include_docs: true })
 
       commit("SET_TASKS", docs.rows.map(row => row.doc))
-      console.log("DOCS: ", docs.rows.map(row => row.doc))
     } catch (error) {
       console.log(error)
     }
@@ -117,7 +74,7 @@ export const actions = {
     }
   },
 
-  async checkTask({ state, commit, dispatch }, id) {
+  async checkTask({ dispatch }, id) {
     try {
       const task = await LOCAL_TASKS.get(id)
 
@@ -128,12 +85,7 @@ export const actions = {
         isChecked: !task.isChecked
       })
 
-
-
-
       dispatch('fetchItems')
-      console.log(state.items)
-
     }
     catch (e) {
       console.log(e)
@@ -164,30 +116,15 @@ export const actions = {
       }
 
       dispatch('fetchItems')
-
-      //commit('CHECK_ALL', checked)
-
     } catch (e) {
       console.log(e)
     }
-  },
-
-  setTaskInput({ commit }, task) {
-    commit('SET_TASK_INPUT'.task)
   },
 
   async changeFilter({ commit, dispatch }, filter) {
     try {
       commit('CHANGE_FILTER', filter)
       dispatch('fetchItems')
-    } catch (e) {
-      console.log(e)
-    }
-  },
-
-  async setTaskText({ commit }, text) {
-    try {
-      commit('SET_TASK_TEXT', text)
     } catch (e) {
       console.log(e)
     }
@@ -202,61 +139,13 @@ export const actions = {
       console.log(e)
     }
   },
-
-
-
 }
 
 export const getters = {
-  getTaskInput: (state) => state.taskInput,
-
   tasks: (state) => state.items,
-
-  filteredItems: (state) => {
-    switch (state.filter) {
-      case 'active':
-        return state.items.filter(item => !item.isChecked)
-      case 'completed':
-        return state.items.filter(item => item.isChecked)
-      default:
-        return state.items
-    }
-  },
-
-  getCompletedTasks: state => {
-    const completedTasks = []
-    state.tasks.filter(task => {
-      if (task.isChecked) {
-        completedTasks.push(task)
-      }
-    });
-    return completedTasks
-  },
-
-  getActiveTasks: state => {
-    const activeTasks = []
-    state.tasks.filter(task => {
-      if (!task.isChecked) {
-        activeTasks.push(task)
-      }
-    });
-    return activeTasks
-  },
-
-  getFilterContent: state => state.filter,
-
-  getEditMode: state => state.editMode,
-
-  getTaskText: state => {
-    for (const task of state.tasks) {
-      if (task.isEditing === true) return task.task
-    }
-  },
 
   showCheckBox: (state) => state.items.length > 0,
 
   allChecked: (state) => state.items.every(item => item.isChecked),
 
-  getActiveTasksa: (state) => state.activeTasks,
-  getCompletedTasksa: (state) => state.completedTasks,
 }
