@@ -30,6 +30,7 @@
           <NuxtLink :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear"  >
             <div class="py-5 hover:bg-green-100 rounded-lg" :class="(index === currentDay && currentYear === savedDate[2] && currentMonth === savedDate[1]) ? 'bg-blue-500' : ''"
             @click="saveDateInStore(index + '-' + currentMonth + '-' + currentYear)"  >
+            <div :class="test === index + '-' + currentMonth + '-' + currentYear ? 'opacity-100' : 'opacity-0'"> boop </div>
               {{index}}
             </div>
           </NuxtLink>
@@ -40,7 +41,6 @@
   
   
   <script>
-  import {mapGetters} from "vuex";
   export default {
       components: {},
   
@@ -56,17 +56,24 @@
           months: ["January", "February", "March", "April", "May", "June", "July",
               "August", "September", "October", "November", "December"],
           calendarDays: null,
-          daysInMonth: null
-
+          daysInMonth: null,
+          storeDates: null,
+          lalalal: null
         }
       },
   
       computed: {
-        ...mapGetters({
-          getSavedDates: 'calendar/getSavedDates'
-        }),
         monthy(){
           return this.daysInMonth
+        },
+        test(){
+          let lalalal
+          this.storeDates.forEach(date => {
+            console.log("TEST: ", date)
+            lalalal = date
+          })
+          return lalalal
+
         }
       },
   
@@ -171,7 +178,7 @@
         this.renderCalendar()
         console.log("Current Date: ", today)
 
-        console.log(this.$store.getters['calendar/getSavedDates'])
+       this.storeDates = this.$store.getters['calendar/getSavedDates']
         },
   
     }
