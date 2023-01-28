@@ -4,17 +4,27 @@ export const state = () => ({
 
 export const mutations = {
     ADD_DATE (state, date){
+        for (let i = 0; i < state.dates.length; i++) {
+            if(state.dates[i].name === date){
+                return
+            }
+          }
         state.dates.push({
             name: date,
         });
-        console.log(state.dates)
+        console.log("Dates in state: ", state.dates)
     },
 }
 
 
 export const getters = {
-    showCheckBox: (state) => state.items.length > 0,
-    allChecked: (state) =>  state.items.every(item => item.isChecked),
+    getSavedDates: (state) => {
+        const savedDates = []
+        for (let i = 0; i < state.dates.length; i++) {
+            savedDates.push(state.dates[i].name)
+        }
+        return savedDates
+    }
 }
 
 

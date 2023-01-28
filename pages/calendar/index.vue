@@ -26,9 +26,10 @@
         <div v-for="index in calendarDays">{{index}}</div>
       </div> -->
       <div class="grid grid-cols-7 space-x-5">
-        <div v-for="index in monthy" class="text-center">
-          <NuxtLink :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear" @click="saveDateInStore(index + '-' + currentMonth + '-' + currentYear)">
-            <div class="py-5 hover:bg-green-100 rounded-lg" :class="(index === currentDay && currentYear === savedDate[2] && currentMonth === savedDate[1]) ? 'bg-blue-500' : ''">
+        <div v-for="index in monthy" :key=index class="text-center">
+          <NuxtLink :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear"  >
+            <div class="py-5 hover:bg-green-100 rounded-lg" :class="(index === currentDay && currentYear === savedDate[2] && currentMonth === savedDate[1]) ? 'bg-blue-500' : ''"
+            @click="saveDateInStore(index + '-' + currentMonth + '-' + currentYear)"  >
               {{index}}
             </div>
           </NuxtLink>
@@ -39,6 +40,7 @@
   
   
   <script>
+  import {mapGetters} from "vuex";
   export default {
       components: {},
   
@@ -60,6 +62,9 @@
       },
   
       computed: {
+        ...mapGetters({
+          getSavedDates: 'calendar/getSavedDates'
+        }),
         monthy(){
           return this.daysInMonth
         }
@@ -136,7 +141,7 @@
           this.renderCalendar()
         },
         saveDateInStore(x){
-          this.$store.dispatch('addDate', this.item)
+          this.$store.dispatch('calendar/addDate', x)
         }
       },
       mounted(){
@@ -164,7 +169,9 @@
 
         this.savedDate = [dd,mm,yyyy]
         this.renderCalendar()
-        console.log(today)
+        console.log("Current Date: ", today)
+
+        console.log(this.$store.getters['calendar/getSavedDates'])
         },
   
     }
