@@ -25,12 +25,15 @@
         <ul @click="printmything(3)" class="days"></ul>
         <div v-for="index in calendarDays">{{index}}</div>
       </div> -->
-      <div class="grid grid-cols-7 space-x-5">
+      <div class="grid grid-cols-7 space-x-5 ">
         <div v-for="index in monthy" :key=index class="text-center">
           <NuxtLink :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear"  >
-            <div class="py-5 hover:bg-green-100 rounded-lg" :class="(index === currentDay && currentYear === savedDate[2] && currentMonth === savedDate[1]) ? 'bg-blue-500' : ''"
+            <div class="py-5 hover:bg-green-100 rounded-lg flex flex-col" :class="(index === currentDay && currentYear === savedDate[2] && currentMonth === savedDate[1]) ? 'bg-blue-500' : ''"
             @click="saveDateInStore(index + '-' + currentMonth + '-' + currentYear)"  >
-            <div :class="test === index + '-' + currentMonth + '-' + currentYear ? 'opacity-100' : 'opacity-0'"> boop </div>
+            <div :class="checkForDateInStore(index + '-' + currentMonth + '-' + currentYear) === true ? 'opacity-100 place-self-center' : 'opacity-0'"> 
+              <div class="h-3 w-3 rounded-full bg-green-800">
+              </div> 
+          </div>
               {{index}}
             </div>
           </NuxtLink>
@@ -66,15 +69,7 @@
         monthy(){
           return this.daysInMonth
         },
-        test(){
-          let lalalal
-          this.storeDates.forEach(date => {
-            console.log("TEST: ", date)
-            lalalal = date
-          })
-          return lalalal
-
-        }
+        
       },
   
       methods: {
@@ -149,6 +144,17 @@
         },
         saveDateInStore(x){
           this.$store.dispatch('calendar/addDate', x)
+        },
+        checkForDateInStore(x){
+          let active = false
+          this.storeDates.forEach(date => {
+            if (x === date){
+              return active = true
+            }
+          })
+          if(active === true){
+            return true
+          }
         }
       },
       mounted(){
