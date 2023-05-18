@@ -12,6 +12,8 @@
     "lintfix": "prettier --write --list-different ."
   },
   "dependencies": {
+    "@capacitor/android": "^4.6.2",
+    "@capacitor/core": "^4.6.2",
     "@nuxtjs/axios": "^5.13.6",
     "core-js": "^3.19.3",
     "nuxt": "^2.15.8",
@@ -22,6 +24,7 @@
     "webpack": "^4.46.0"
   },
   "devDependencies": {
+    "@capacitor/cli": "^4.6.2",
     "@nuxtjs/tailwindcss": "^4.2.1",
     "eslint-config-prettier": "^8.3.0",
     "postcss": "^8.4.4",
