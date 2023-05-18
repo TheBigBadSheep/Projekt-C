@@ -30,7 +30,7 @@
           <NuxtLink :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear"  >
             <div class="py-5 hover:bg-green-100 rounded-lg" :class="(index === currentDay && currentYear === savedDate[2] && currentMonth === savedDate[1]) ? 'bg-blue-500' : ''"
             @click="saveDateInStore(index + '-' + currentMonth + '-' + currentYear)"  >
-            <div :class="test === index + '-' + currentMonth + '-' + currentYear ? 'opacity-100' : 'opacity-0'"> boop </div>
+            <div :class="checkForStoreDate === index + '-' + currentMonth + '-' + currentYear ? 'opacity-100' : 'opacity-0'"> ToDo's </div>
               {{index}}
             </div>
           </NuxtLink>
@@ -58,7 +58,6 @@
           calendarDays: null,
           daysInMonth: null,
           storeDates: null,
-          lalalal: null
         }
       },
   
@@ -66,10 +65,10 @@
         monthy(){
           return this.daysInMonth
         },
-        test(){
+        checkForStoreDate(){
           let lalalal
           this.storeDates.forEach(date => {
-            console.log("TEST: ", date)
+            console.log("checkForStoreDate: ", date)
             lalalal = date
           })
           return lalalal
