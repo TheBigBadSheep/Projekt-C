@@ -1,72 +1,94 @@
 <template>
   <div>
-
     <ToDoInputField
       :show-check-box="showCheckBox"
       :all-checked="allChecked"
-      class=""/>
+      class=""
+    />
 
+    <div>
+      <transition-group name="list">
+        <ToDoListItem
+          v-for="item in filteredTasks"
+          v-if="item._id"
+          :key="item._id"
+          :item="item"
+          class="px-3"
+        />
+      </transition-group>
 
-      <div>
-        <transition-group name="list">
-          <ToDoListItem
-            v-for="(item) in filteredTasks"
-            v-if="item._id"
-            :key="item._id"
-            :item="item"
-            class="px-3"/>
-        </transition-group>
-    
-        <ToDoFooter :items="items"/>
-      </div>
+      <ToDoFooter :items="items" />
+    </div>
   </div>
 </template>
 
-
 <script>
-
-import ToDoInputField from "./ToDoInputField.vue"
-import ToDoListItem from "./ToDoListItem.vue"
-import ToDoFooter from "./ToDoFooter.vue"
+import ToDoInputField from './ToDoInputField.vue'
+import ToDoListItem from './ToDoListItem.vue'
+import ToDoFooter from './ToDoFooter.vue'
 
 export default {
-
-    beforeMount(){
-      this.$store.dispatch('fetchItems')
-      this.tasks = this.$store.getters.tasks
-    },
+  data() {
+    return {
+      currentDate: null,
+    }
+  },
+  beforeMount() {
+    this.$store.dispatch('fetchItems')
+    this.tasks = this.$store.getters.tasks
+  },
 
   components: {
-    ToDoInputField, ToDoListItem, ToDoFooter,
+    ToDoInputField,
+    ToDoListItem,
+    ToDoFooter,
   },
 
   computed: {
-
-    showCheckBox(){
+    showCheckBox() {
       return this.$store.getters.showCheckBox
     },
 
-    allChecked(){
+    allChecked() {
       return this.$store.getters.allChecked
     },
 
-    items(){
+    items() {
       return this.$store.state.items
     },
 
-    filteredTasks(){
+    filteredTasks() {
       const filter = this.$store.state.filter
+
+      this.$store.state.items.forEach((item) => {
+        console.log(
+          'item.date ',
+          item.date,
+          'store.current',
+          this.currentDate,
+          item.date === this.currentDate
+        )
+      })
+
+      const todaysTasks = this.$store.state.items.filter(
+        (item) => item.date === this.currentDate
+      )
 
       switch (filter) {
         case 'active':
-          return this.$store.state.items.filter(item => !item.isChecked)
+          return todaysTasks.filter((item) => !item.isChecked)
         case 'completed':
-          return this.$store.state.items.filter(item => item.isChecked)
+          return todaysTasks.filter((item) => item.isChecked)
         default:
-          return this.$store.state.items
+          return todaysTasks
       }
     },
-  }
+  },
+
+  mounted() {
+    this.currentDate = this.$store.getters['calendar/getCurrentDate']
+    console.log(this.$store.getters['calendar/getSavedDates'])
+  },
 }
 </script>
 
@@ -75,7 +97,8 @@ export default {
   display: inline-block;
   margin-right: 10px;
 }
-.list-enter-active, .list-leave-active {
+.list-enter-active,
+.list-leave-active {
   transition: all 0.5s;
 }
 .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {

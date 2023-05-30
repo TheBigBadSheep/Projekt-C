@@ -2,8 +2,7 @@
   <div class="h-full">
     <nuxt-link to="/calendar">
       <div
-        class="flex absolute z-20 justify-center w-full text-white text-4xl shadow-inner-x"
-      >
+        class="flex absolute z-20 justify-center w-full text-white text-4xl shadow-inner-x">
         <span class="h-10 mt-9">T</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +47,9 @@ export default {
 
   computed: {},
 
-  methods: {},
+  methods: {
+    goToCalendar() {},
+  },
 }
 </script>
 
@@ -64,3 +65,6 @@ export default {
   opacity: 0;
 }
 </style>
+</script>
+
+<style></style>
