@@ -11,6 +11,7 @@
         <transition-group name="list">
           <ToDoListItem
             v-for="(item) in filteredTasks"
+            v-if="item._id"
             :key="item._id"
             :item="item"
             class="px-3"/>
