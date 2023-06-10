@@ -17,7 +17,12 @@ export const mutations = {
     state.dates.push({ name: date })
 
     state.currentDate = date
-    console.log('Dates in state: ', state.dates)
+  //  console.log("STORE", date)
+  //  console.log('Dates in state: ', state.dates)
+  },
+  SET_CURRENT_DATE(state, date) {
+    state.currentDate = date
+  //  console.log("STORE CURRENT DATE", date)
   },
 }
 
@@ -29,11 +34,17 @@ export const getters = {
     }
     return savedDates
   },
+  getCurrentDate: (state) => {
+    return state.currentDate
+  },
 }
 
 export const actions = {
   addDate({ commit }, date) {
     commit('ADD_DATE', date)
+  },
+  setCurrentDate({ commit }, date) {
+    commit('SET_CURRENT_DATE', date)
   },
   getCurrentDate: (state) => {
     return state.currentDate

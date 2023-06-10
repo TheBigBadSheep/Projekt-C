@@ -97,6 +97,7 @@
         },
         saveDateInStore(x){
           this.$store.dispatch('calendar/addDate', x)
+          this.$store.dispatch('calendar/setCurrentDate', x)
         },
         checkForDateInStore(x){
           let active = false
@@ -126,7 +127,7 @@
 
         this.savedDate = [dd,mm,yyyy]
         this.renderCalendar()
-        console.log("Current Date: ", today)
+      //  console.log("Current Date: ", today)
 
        this.storeDates = this.$store.getters['calendar/getSavedDates']
         },

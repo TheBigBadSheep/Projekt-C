@@ -80,6 +80,7 @@ export const actions = {
 
       const response = await LOCAL_TASKS.put({
         _id: id,
+        date: task.date,
         _rev: task._rev,
         text: task.text,
         isChecked: !task.isChecked

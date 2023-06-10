@@ -59,7 +59,7 @@ export default {
         const task = {
           text: this.item,
           isChecked: false,
-          date: dayjs().format('DD-MM-YYYY'),
+          date: this.currentDate = this.$store.getters['calendar/getCurrentDate'] //dayjs().format('DD-MM-YYYY'),
         }
         this.$store.dispatch('addItem', task)
         this.item = ''

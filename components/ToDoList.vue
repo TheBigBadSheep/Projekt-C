@@ -58,26 +58,19 @@ export default {
     },
 
     filteredTasks() {
+    this.currentDate = this.$store.getters['calendar/getCurrentDate']
+      if (!this.currentDate) return  //If there's no date do nothing
       const filter = this.$store.state.filter
 
-      this.$store.state.items.forEach((item) => {
-        console.log(
-          'item.date ',
-          item.date,
-          'store.current',
-          this.currentDate,
-          item.date === this.currentDate
-        )
-      })
-
-      const todaysTasks = this.$store.state.items.filter(
-        (item) => item.date === this.currentDate
+      let todaysTasks = this.$store.state.items.filter(
+        (item) =>  item.date === this.currentDate
       )
 
       switch (filter) {
         case 'active':
           return todaysTasks.filter((item) => !item.isChecked)
         case 'completed':
+          console.log("TEST: ",todaysTasks)
           return todaysTasks.filter((item) => item.isChecked)
         default:
           return todaysTasks
@@ -86,8 +79,7 @@ export default {
   },
 
   mounted() {
-    this.currentDate = this.$store.getters['calendar/getCurrentDate']
-    console.log(this.$store.getters['calendar/getSavedDates'])
+    //console.log(this.$store.getters['calendar/getSavedDates'])
   },
 }
 </script>
