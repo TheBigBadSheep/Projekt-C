@@ -102,7 +102,9 @@
         checkForDateInStore(x){
           let active = false
           this.storeDates.forEach(date => {
-            if (x === date){
+            if (x === date.date){
+              //console.log("TEST", this.storeDates = this.$store.getters['calendar/getSavedDates'])
+              //console.log(date)
               return active = true
             }
           })
@@ -111,7 +113,8 @@
           }
         }
       },
-      mounted(){
+
+      async mounted(){
         this.date = new Date()
 
         var today = new Date();
@@ -126,12 +129,18 @@
         today = dd + '/' + mm + '/' + yyyy;
 
         this.savedDate = [dd,mm,yyyy]
-        this.renderCalendar()
+        
+        try {
+          await this.$store.dispatch('fetchItems')
+          this.storeDates = this.$store.getters.tasks
+          this.renderCalendar()
+        }catch{
+          console.log("Error fetching the store data")
+        }
+        
       //  console.log("Current Date: ", today)
-
-       this.storeDates = this.$store.getters['calendar/getSavedDates']
+      // this.storeDates = this.$store.getters['calendar/getSavedDates']
         },
-  
     }
   </script>
   
