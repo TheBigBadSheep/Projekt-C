@@ -17,12 +17,12 @@ export const mutations = {
     state.dates.push({ name: date })
 
     state.currentDate = date
-  //  console.log("STORE", date)
-  //  console.log('Dates in state: ', state.dates)
+    //  console.log("STORE", date)
+    //  console.log('Dates in state: ', state.dates)
   },
   SET_CURRENT_DATE(state, date) {
     state.currentDate = date
-  //  console.log("STORE CURRENT DATE", date)
+    //  console.log("STORE CURRENT DATE", date)
   },
 }
 

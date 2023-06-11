@@ -1,11 +1,11 @@
-import PouchDB from 'pouchdb';
+import PouchDB from 'pouchdb'
 const LOCAL_TASKS = new PouchDB('tasks')
 
 export const state = () => ({
   taskInput: null,
   items: [],
   filter: 'all',
-  editMode: false
+  editMode: false,
 })
 
 export const mutations = {
@@ -19,7 +19,7 @@ export const mutations = {
 
   SET_TASKS(state, tasks) {
     state.items = tasks
-  }
+  },
 }
 
 export const actions = {
@@ -27,13 +27,12 @@ export const actions = {
     try {
       const newTask = {
         _id: new Date().getTime().toString(),
-        ...task
+        ...task,
       }
       await LOCAL_TASKS.put(newTask)
       commit('ADD_ITEM', task)
       dispatch('fetchItems')
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error)
     }
   },
@@ -42,7 +41,10 @@ export const actions = {
     try {
       const docs = await LOCAL_TASKS.allDocs({ include_docs: true })
 
-      commit("SET_TASKS", docs.rows.map(row => row.doc))
+      commit(
+        'SET_TASKS',
+        docs.rows.map((row) => row.doc)
+      )
     } catch (error) {
       console.log(error)
     }
@@ -50,10 +52,8 @@ export const actions = {
 
   async removeTask({ dispatch }, task) {
     try {
-
       await LOCAL_TASKS.remove(task)
       dispatch('fetchItems')
-
     } catch (error) {
       console.log(error)
     }
@@ -63,13 +63,14 @@ export const actions = {
     try {
       const result = await LOCAL_TASKS.allDocs({ include_docs: true })
 
-      const promises = result.rows.filter(row => row.doc.isChecked).map(row => LOCAL_TASKS.remove(row.doc))
+      const promises = result.rows
+        .filter((row) => row.doc.isChecked)
+        .map((row) => LOCAL_TASKS.remove(row.doc))
 
       await Promise.all(promises)
 
       dispatch('fetchItems')
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e)
     }
   },
@@ -83,12 +84,11 @@ export const actions = {
         date: task.date,
         _rev: task._rev,
         text: task.text,
-        isChecked: !task.isChecked
+        isChecked: !task.isChecked,
       })
 
       dispatch('fetchItems')
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e)
       return
     }
@@ -99,19 +99,21 @@ export const actions = {
       const result = await LOCAL_TASKS.allDocs({ include_docs: true })
 
       if (checked) {
-        const promises = result.rows.filter(row => !row.doc.isChecked).map(row => {
-          row.doc.isChecked = !row.doc.isChecked
-          LOCAL_TASKS.put(row.doc)
-        })
+        const promises = result.rows
+          .filter((row) => !row.doc.isChecked)
+          .map((row) => {
+            row.doc.isChecked = !row.doc.isChecked
+            LOCAL_TASKS.put(row.doc)
+          })
 
         await Promise.all(promises)
-      }
-
-      else {
-        const promises = result.rows.filter(row => row.doc.isChecked).map(row => {
-          row.doc.isChecked = !row.doc.isChecked
-          LOCAL_TASKS.put(row.doc)
-        })
+      } else {
+        const promises = result.rows
+          .filter((row) => row.doc.isChecked)
+          .map((row) => {
+            row.doc.isChecked = !row.doc.isChecked
+            LOCAL_TASKS.put(row.doc)
+          })
 
         await Promise.all(promises)
       }
@@ -147,6 +149,5 @@ export const getters = {
 
   showCheckBox: (state) => state.items.length > 0,
 
-  allChecked: (state) => state.items.every(item => item.isChecked),
-
+  allChecked: (state) => state.items.every((item) => item.isChecked),
 }

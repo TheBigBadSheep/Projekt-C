@@ -58,19 +58,19 @@ export default {
     },
 
     filteredTasks() {
-    this.currentDate = this.$store.getters['calendar/getCurrentDate']
-      if (!this.currentDate) return  //If there's no date do nothing
+      this.currentDate = this.$store.getters['calendar/getCurrentDate']
+      if (!this.currentDate) return //If there's no date do nothing
       const filter = this.$store.state.filter
 
       let todaysTasks = this.$store.state.items.filter(
-        (item) =>  item.date === this.currentDate
+        (item) => item.date === this.currentDate
       )
 
       switch (filter) {
         case 'active':
           return todaysTasks.filter((item) => !item.isChecked)
         case 'completed':
-          console.log("TEST: ",todaysTasks)
+          console.log('TEST: ', todaysTasks)
           return todaysTasks.filter((item) => item.isChecked)
         default:
           return todaysTasks
