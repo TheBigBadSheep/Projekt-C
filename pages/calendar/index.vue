@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-ToDo-Green">
+  <div class="bg-ToDo-Green h-screen overflow-hidden">
     <header class="flex justify-center">
       <p class="current-date"></p>
       <div class="flex p-4 font-medium">
@@ -15,13 +15,13 @@
         <div class="p-4">{{ currentMonth }} / {{ currentYear }}</div>
       </div>
     </header>
-    <div class="grid grid-cols-7 space-x-5">
+    <div class="grid grid-cols-7 sm:h-full h-4/5 sm:px-0 px-5 sm:space-x-5">
       <div v-for="index in monthDays" :key="index" class="text-center">
         <NuxtLink
           :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear"
         >
           <div
-            class="py-5 hover:bg-green-100 rounded-lg flex flex-col"
+            class="py-5 h-full w-full border-2 hover:bg-green-100 rounded-lg flex flex-col"
             :class="
               index === currentDay &&
               currentYear === savedDate[2] &&
