@@ -44,22 +44,23 @@
       </div>
       <textarea
         v-model="inputValue"
-        class="no-scrollbar resize-none w-full bg-white text-2xl border-2 border-ToDo-Green rounded-lg px-5 py-3 hover:shadow-inner focus:shadow-inner focus:outline-none focus:border-gray-200 transition ease-in-out duration-200"
+        rows="3"
+        class="no-scrollbar resize-none pl-5 pr-12 sm:pr-12 py-3 w-full bg-white text-md sm:text-2xl border-2 border-ToDo-Green rounded-lg hover:shadow-inner focus:shadow-inner focus:outline-none focus:border-gray-200 transition ease-in-out duration-200"
         :class="{ 'line-through opacity-30': item.isChecked }"
         type="text"
         @change="updateTask"
       />
     </div>
 
-    <div class="absolute flex flex-col h-8 w-8 inset-y-0 right-6">
+    <div class="absolute flex flex-col h-6 w-6 sm:h-8 sm:w-8 inset-y-0 right-6">
       <img
         src="../assets/deleteButton.svg"
-        class="h-8 w-8 mt-3 opacity-10 hover:opacity-100 transition ease-out duration-100 cursor-pointer"
+        class="h-full w-full mt-3 opacity-10 hover:opacity-100 transition ease-out duration-100 cursor-pointer"
         @click="removeTask"
       />
       <img
         src="../assets/gallery.svg"
-        class="h-8 w-8 mt-3 opacity-10 hover:opacity-100 transition ease-out duration-100 cursor-pointer"
+        class="h-full w-full mt-3 opacity-10 hover:opacity-100 transition ease-out duration-100 cursor-pointer"
         @click="updateTaskImage"
       />
     </div>
