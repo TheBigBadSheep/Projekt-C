@@ -34,7 +34,7 @@
       <img
         class="h-40 w-64 object-cover rounded-md"
         v-if="item.image"
-        :src="item.image.webPath"
+        :src="item.image"
       />
 
       <textarea

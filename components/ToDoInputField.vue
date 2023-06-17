@@ -43,6 +43,9 @@
 <script>
 import dayjs from 'dayjs'
 import { Camera } from '@capacitor/camera'
+import { Filesystem } from '@capacitor/filesystem'
+import { Capacitor } from '@capacitor/core'
+
 export default {
   props: {
     showCheckBox: {
@@ -86,10 +89,12 @@ export default {
     },
     async addImage() {
       const image = await Camera.getPhoto({})
+      const imageData = await this.readFile(image.webPath)
+      const base64Data = await this.convertToBase64(imageData)
 
       const task = {
         text: this.item,
-        image: image,
+        image: base64Data,
         isChecked: false,
         date: (this.currentDate =
           this.$store.getters['calendar/getCurrentDate']), //dayjs().format('DD-MM-YYYY'),
@@ -97,6 +102,21 @@ export default {
       this.$store.dispatch('addItem', task)
       this.item = ''
       this.$emit('taskAdded')
+    },
+    async readFile(filePath) {
+      const response = await fetch(filePath)
+      const blob = await response.blob()
+      return blob
+    },
+    async convertToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onerror = reject
+        reader.onload = () => {
+          resolve(reader.result)
+        }
+        reader.readAsDataURL(blob)
+      })
     },
   },
 }
