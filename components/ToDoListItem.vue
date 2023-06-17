@@ -32,9 +32,9 @@
     </div>
     <div class="flex flex-row space-x-3 w-full min-h-fit">
       <img
-        class="h-40 w-64 object-cover rounded-md border-2 border-ToDo-Green"
         v-if="item.image"
         :src="item.image"
+        class="h-40 w-64 object-cover rounded-md border-2 border-ToDo-Green"
       />
 
       <textarea
@@ -46,13 +46,16 @@
       />
     </div>
 
-    <div
-      class="absolute h-8 w-8 inset-y-0 right-6 opacity-10 hover:opacity-100 transition ease-out duration-100 cursor-pointer"
-    >
+    <div class="absolute flex flex-col h-8 w-8 inset-y-0 right-6">
       <img
         src="../assets/deleteButton.svg"
-        class="h-8 w-8 mt-3"
+        class="h-8 w-8 mt-3 opacity-10 hover:opacity-100 transition ease-out duration-100 cursor-pointer"
         @click="removeTask"
+      />
+      <img
+        src="../assets/gallery.svg"
+        class="h-8 w-8 mt-3 opacity-10 hover:opacity-100 transition ease-out duration-100 cursor-pointer"
+        @click="updateTaskImage"
       />
     </div>
   </div>
@@ -75,10 +78,16 @@ export default {
   methods: {
     checkTask() {
       this.$store.dispatch('checkTask', this.item._id)
+      console.log(this.item)
       this.emitChange()
     },
     removeTask() {
       this.$store.dispatch('removeTask', this.item)
+      this.emitChange()
+    },
+
+    updateTaskImage() {
+      this.$store.dispatch('updateTaskImage', this.item._id)
       this.emitChange()
     },
     updateTask() {
