@@ -25,7 +25,7 @@
       class="-z-10 absolute flex justify-center w-full bg-ToDo-Green h-56 -mt-2 l"
     ></div>
     <div class="z-10 sticky flex flex-col w-full">
-      <div class="w-11/12 lg:w-1/2 sm:place-self-center">
+      <div class="lg:w-1/2 sm:place-self-center">
         <ToDoList class="mt-28"></ToDoList>
       </div>
     </div>

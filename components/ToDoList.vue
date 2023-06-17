@@ -13,7 +13,7 @@
           v-if="item._id"
           :key="item._id"
           :item="item"
-          class="px-3"
+          class="px-3 mb-5"
         />
       </transition-group>
 
