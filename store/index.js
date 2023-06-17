@@ -84,6 +84,7 @@ export const actions = {
         date: task.date,
         _rev: task._rev,
         text: task.text,
+        image: task.image,
         isChecked: !task.isChecked,
       })
 
