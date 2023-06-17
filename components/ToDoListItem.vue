@@ -80,6 +80,8 @@ export default {
         _rev: this.item._rev,
         text: this.inputValue,
         isChecked: this.item.isChecked,
+        date: (this.currentDate =
+          this.$store.getters['calendar/getCurrentDate']), //dayjs().format('DD-MM-YYYY'),
       }
       this.$store.dispatch('updateTask', task)
       this.emitChange()

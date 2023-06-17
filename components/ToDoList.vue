@@ -70,7 +70,6 @@ export default {
         case 'active':
           return todaysTasks.filter((item) => !item.isChecked)
         case 'completed':
-          console.log('TEST: ', todaysTasks)
           return todaysTasks.filter((item) => item.isChecked)
         default:
           return todaysTasks
