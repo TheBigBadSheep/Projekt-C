@@ -31,12 +31,17 @@
       </svg>
     </div>
     <div class="flex flex-row space-x-3 w-full min-h-fit">
-      <img
-        v-if="item.image"
-        :src="item.image"
-        class="h-40 w-64 object-cover rounded-md border-2 border-ToDo-Green"
-      />
-
+      <div v-if="item.image" class="relative h-32 w-48">
+        <img
+          :src="item.image"
+          class="h-full w-full object-cover rounded-md border-2 border-ToDo-Green"
+        />
+        <img
+          src="../assets/deleteButton.svg"
+          class="absolute bg-white opacity-60 p-1 rounded-full h-6 w-6 right-2 top-2 transition ease-out duration-100 cursor-pointer"
+          @click="removeTaskImage"
+        />
+      </div>
       <textarea
         v-model="inputValue"
         class="no-scrollbar resize-none w-full bg-white text-2xl border-2 border-ToDo-Green rounded-lg px-5 py-3 hover:shadow-inner focus:shadow-inner focus:outline-none focus:border-gray-200 transition ease-in-out duration-200"
@@ -81,6 +86,7 @@ export default {
       console.log(this.item)
       this.emitChange()
     },
+
     removeTask() {
       this.$store.dispatch('removeTask', this.item)
       this.emitChange()
@@ -90,6 +96,12 @@ export default {
       this.$store.dispatch('updateTaskImage', this.item._id)
       this.emitChange()
     },
+
+    removeTaskImage() {
+      this.$store.dispatch('removeTaskImage', this.item._id)
+      this.emitChange()
+    },
+
     updateTask() {
       const task = {
         _id: this.item._id,

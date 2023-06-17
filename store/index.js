@@ -127,6 +127,26 @@ export const actions = {
     }
   },
 
+  async removeTaskImage({ dispatch }, id) {
+    try {
+      const task = await LOCAL_TASKS.get(id)
+
+      const response = await LOCAL_TASKS.put({
+        _id: id,
+        date: task.date,
+        _rev: task._rev,
+        text: task.text,
+        image: null,
+        isChecked: task.isChecked,
+      })
+
+      dispatch('fetchItems')
+    } catch (e) {
+      console.log(e)
+      return
+    }
+  },
+
   async toggleAllTasks({ dispatch }, checked) {
     try {
       const result = await LOCAL_TASKS.allDocs({ include_docs: true })
