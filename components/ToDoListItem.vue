@@ -1,12 +1,12 @@
 <template>
-  <div class="relative h-full flex flex-row gap-4">
-    <div @click="checkTask" class="h-full w-10">
+  <div class="relative h-full items-center flex flex-row gap-4">
+    <div @click="checkTask" class="h-fit w-10">
       <svg
+        v-if="item.isChecked"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
         fill="currentColor"
-        class="h-10 w-10 mt-3 absolute text-ToDo-LightGreen"
-        :class="item.isChecked ? 'opacity-100' : 'opacity-0'"
+        class="h-10 w-10 text-ToDo-LightGreen"
       >
         <path
           fill-rule="evenodd"
@@ -15,12 +15,12 @@
         />
       </svg>
       <svg
+        v-if="!item.isChecked"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
-        class="h-10 w-10 mt-3 absolute text-ToDo-LightGreen"
-        :class="!item.isChecked ? 'opacity-100' : 'opacity-0'"
+        class="h-10 w-10 text-ToDo-LightGreen"
       >
         <path
           stroke-linecap="round"
@@ -30,17 +30,24 @@
         />
       </svg>
     </div>
+    <div class="flex flex-row space-x-3 w-full min-h-fit">
+      <img
+        class="h-40 w-64 object-cover rounded-md border-2 border-ToDo-Green"
+        v-if="item.image"
+        :src="item.image"
+      />
 
-    <input
-      v-model="inputValue"
-      class="w-full bg-white text-2xl border-2 border-ToDo-Green rounded-lg px-5 py-3 mb-5 hover:shadow-inner focus:shadow-inner focus:outline-none focus:border-gray-200 transition ease-in-out duration-200"
-      :class="{ 'line-through opacity-30': item.isChecked }"
-      type="text"
-      @change="updateTask"
-    />
+      <textarea
+        v-model="inputValue"
+        class="no-scrollbar resize-none w-full bg-white text-2xl border-2 border-ToDo-Green rounded-lg px-5 py-3 hover:shadow-inner focus:shadow-inner focus:outline-none focus:border-gray-200 transition ease-in-out duration-200"
+        :class="{ 'line-through opacity-30': item.isChecked }"
+        type="text"
+        @change="updateTask"
+      />
+    </div>
 
     <div
-      class="absolute h-8 w-8 inset-y-0 right-6 opacity-0 hover:opacity-100 transition ease-out duration-100 cursor-pointer"
+      class="absolute h-8 w-8 inset-y-0 right-6 opacity-10 hover:opacity-100 transition ease-out duration-100 cursor-pointer"
     >
       <img
         src="../assets/deleteButton.svg"
@@ -80,6 +87,7 @@ export default {
         _rev: this.item._rev,
         text: this.inputValue,
         isChecked: this.item.isChecked,
+        image: this.item.image,
         date: (this.currentDate =
           this.$store.getters['calendar/getCurrentDate']), //dayjs().format('DD-MM-YYYY'),
       }
@@ -92,3 +100,15 @@ export default {
   },
 }
 </script>
+<style scoped>
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+</style>

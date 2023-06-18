@@ -124,11 +124,11 @@ export default {
       if (this.currentMonth === 12) {
         this.currentMonth = 1
         this.currentYear += 1
-        console.log(this.currentMonth)
+      //  console.log(this.currentMonth)
         this.renderCalendar()
       } else {
         this.currentMonth += 1
-        console.log(this.currentMonth)
+      //  console.log(this.currentMonth)
         this.renderCalendar()
       }
     },
@@ -140,6 +140,7 @@ export default {
     saveDateInStore(x) {
       this.$store.dispatch('calendar/addDate', x)
       this.$store.dispatch('calendar/setCurrentDate', x)
+      this.$store.dispatch('setCurrentDate', x)
     },
     checkForDateInStore(x) {
       let active = false

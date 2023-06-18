@@ -13,7 +13,7 @@
           v-if="item._id"
           :key="item._id"
           :item="item"
-          class="px-3"
+          class="px-3 mb-5"
         />
       </transition-group>
 
@@ -54,7 +54,19 @@ export default {
     },
 
     items() {
-      return this.$store.state.items
+      this.currentDate = this.$store.getters['calendar/getCurrentDate']
+      if (!this.currentDate) return //If there's no date do nothing
+      const filter = this.$store.state.filter
+
+      let todaysTasks = this.$store.state.items.filter(
+        (item) => item.date === this.currentDate
+      )
+      if (!todaysTasks) return
+      if (todaysTasks.filter((item) => !item.isChecked).length > 0){
+        return todaysTasks.filter((item) => !item.isChecked)
+      } else{
+        return todaysTasks.filter((item) => item.isChecked)
+      }
     },
 
     filteredTasks() {
