@@ -6,6 +6,7 @@ export const state = () => ({
   items: [],
   filter: 'all',
   editMode: false,
+  currentDate: '',
 })
 
 export const mutations = {
@@ -20,9 +21,15 @@ export const mutations = {
   SET_TASKS(state, tasks) {
     state.items = tasks
   },
+  SET_CURRENT_DATE(state, date) {
+    state.currentDate = date
+  },
 }
 
 export const actions = {
+  setCurrentDate({ commit }, date) {
+    commit('SET_CURRENT_DATE', date)
+  },
   async addItem({ commit, dispatch }, task) {
     try {
       const newTask = {
@@ -98,19 +105,24 @@ export const actions = {
   async toggleAllTasks({ dispatch }, checked) {
     try {
       const result = await LOCAL_TASKS.allDocs({ include_docs: true })
-
       if (checked) {
         const promises = result.rows
-          .filter((row) => !row.doc.isChecked)
+          //Get only the task where the date matches the active date in the state
+          .filter(
+            (row) =>
+              !row.doc.isChecked && row.doc.date === this.state.currentDate
+          )
           .map((row) => {
             row.doc.isChecked = !row.doc.isChecked
             LOCAL_TASKS.put(row.doc)
           })
-
         await Promise.all(promises)
       } else {
         const promises = result.rows
-          .filter((row) => row.doc.isChecked)
+          .filter(
+            (row) =>
+              row.doc.isChecked && row.doc.date === this.state.currentDate
+          )
           .map((row) => {
             row.doc.isChecked = !row.doc.isChecked
             LOCAL_TASKS.put(row.doc)

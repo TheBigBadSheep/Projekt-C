@@ -91,7 +91,6 @@ export default {
       const image = await Camera.getPhoto({})
       const imageData = await this.readFile(image.webPath)
       const base64Data = await this.convertToBase64(imageData)
-
       const task = {
         text: this.item,
         image: base64Data,
