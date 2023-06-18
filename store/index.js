@@ -1,5 +1,6 @@
 import PouchDB from 'pouchdb'
 const LOCAL_TASKS = new PouchDB('tasks')
+import { Camera } from '@capacitor/camera'
 
 export const state = () => ({
   taskInput: null,
@@ -102,6 +103,50 @@ export const actions = {
     }
   },
 
+  async updateTaskImage({ dispatch }, id) {
+    try {
+      const task = await LOCAL_TASKS.get(id)
+
+      const image = await Camera.getPhoto({})
+      const imageData = await readFile(image.webPath)
+      const base64Data = await convertToBase64(imageData)
+
+      const response = await LOCAL_TASKS.put({
+        _id: id,
+        date: task.date,
+        _rev: task._rev,
+        text: task.text,
+        image: base64Data,
+        isChecked: task.isChecked,
+      })
+
+      dispatch('fetchItems')
+    } catch (e) {
+      console.log(e)
+      return
+    }
+  },
+
+  async removeTaskImage({ dispatch }, id) {
+    try {
+      const task = await LOCAL_TASKS.get(id)
+
+      const response = await LOCAL_TASKS.put({
+        _id: id,
+        date: task.date,
+        _rev: task._rev,
+        text: task.text,
+        image: null,
+        isChecked: task.isChecked,
+      })
+
+      dispatch('fetchItems')
+    } catch (e) {
+      console.log(e)
+      return
+    }
+  },
+
   async toggleAllTasks({ dispatch }, checked) {
     try {
       const result = await LOCAL_TASKS.allDocs({ include_docs: true })
@@ -163,4 +208,21 @@ export const getters = {
   showCheckBox: (state) => state.items.length > 0,
 
   allChecked: (state) => state.items.every((item) => item.isChecked),
+}
+
+const readFile = async (filePath) => {
+  const response = await fetch(filePath)
+  const blob = await response.blob()
+  return blob
+}
+
+const convertToBase64 = async (blob) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onerror = reject
+    reader.onload = () => {
+      resolve(reader.result)
+    }
+    reader.readAsDataURL(blob)
+  })
 }
