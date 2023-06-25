@@ -60,6 +60,7 @@ export default {
   data() {
     return {
       item: '',
+      tag: ['Important', 'Normal', 'Trivial'],
     }
   },
 
@@ -76,8 +77,9 @@ export default {
         const task = {
           text: this.item,
           isChecked: false,
+          tag: this.tag[2],
           date: (this.currentDate =
-            this.$store.getters['calendar/getCurrentDate']), //dayjs().format('DD-MM-YYYY'),
+            this.$store.getters['calendar/getCurrentDate']), 
         }
         this.$store.dispatch('addItem', task)
         this.item = ''
