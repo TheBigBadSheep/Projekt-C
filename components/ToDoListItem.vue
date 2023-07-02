@@ -86,7 +86,6 @@ export default {
   methods: {
     checkTask() {
       this.$store.dispatch('checkTask', this.item._id)
-      console.log(this.item)
       this.emitChange()
     },
 

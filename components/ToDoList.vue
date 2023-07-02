@@ -53,6 +53,10 @@ export default {
       return this.$store.getters.allChecked
     },
 
+    tags() {
+      return this.$store.getters.getTag
+    },
+
     items() {
       this.currentDate = this.$store.getters['calendar/getCurrentDate']
       if (!this.currentDate) return //If there's no date do nothing
@@ -62,9 +66,9 @@ export default {
         (item) => item.date === this.currentDate
       )
       if (!todaysTasks) return
-      if (todaysTasks.filter((item) => !item.isChecked).length > 0){
+      if (todaysTasks.filter((item) => !item.isChecked).length > 0) {
         return todaysTasks.filter((item) => !item.isChecked)
-      } else{
+      } else {
         return todaysTasks.filter((item) => item.isChecked)
       }
     },
@@ -73,6 +77,7 @@ export default {
       this.currentDate = this.$store.getters['calendar/getCurrentDate']
       if (!this.currentDate) return //If there's no date do nothing
       const filter = this.$store.state.filter
+      const priority = this.$store.state.tag
 
       let todaysTasks = this.$store.state.items.filter(
         (item) => item.date === this.currentDate
@@ -80,13 +85,54 @@ export default {
 
       switch (filter) {
         case 'active':
-          return todaysTasks.filter((item) => !item.isChecked)
+          switch (priority) {
+            case 1:
+              return todaysTasks.filter(
+                (item) => !item.isChecked && item.tag == 'Trivial'
+              )
+            case 2:
+              return todaysTasks.filter(
+                (item) => !item.isChecked && item.tag == 'Normal'
+              )
+            case 3:
+              return todaysTasks.filter(
+                (item) => !item.isChecked && item.tag == 'Important'
+              )
+            default:
+              return todaysTasks.filter((item) => !item.isChecked)
+          }
         case 'completed':
-          return todaysTasks.filter((item) => item.isChecked)
+          switch (priority) {
+            case 1:
+              return todaysTasks.filter(
+                (item) => item.isChecked && item.tag == 'Trivial'
+              )
+            case 2:
+              return todaysTasks.filter(
+                (item) => item.isChecked && item.tag == 'Normal'
+              )
+            case 3:
+              return todaysTasks.filter(
+                (item) => item.isChecked && item.tag == 'Important'
+              )
+            default:
+              return todaysTasks.filter((item) => item.isChecked)
+          }
         default:
-          return todaysTasks
+          switch (priority) {
+            case 1:
+              return todaysTasks.filter((item) => item.tag == 'Trivial')
+            case 2:
+              return todaysTasks.filter((item) => item.tag == 'Normal')
+            case 3:
+              return todaysTasks.filter((item) => item.tag == 'Important')
+            default:
+              return todaysTasks
+          }
       }
     },
+
+    filterTags() {},
   },
 
   mounted() {
