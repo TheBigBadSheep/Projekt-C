@@ -63,6 +63,7 @@
         class="h-full w-full mt-3 opacity-10 hover:opacity-100 transition ease-out duration-100 cursor-pointer"
         @click="updateTaskImage"
       />
+      <button class="p-2 rounded-lg bg-ToDo-Green" @click="changeTag">{{ this.item.tag }}</button>
     </div>
   </div>
 </template>
@@ -79,12 +80,12 @@ export default {
   data() {
     return {
       inputValue: this.item.text,
+      tag: ['Important', 'Normal', 'Trivial'],
     }
   },
   methods: {
     checkTask() {
       this.$store.dispatch('checkTask', this.item._id)
-      console.log(this.item)
       this.emitChange()
     },
 
@@ -103,6 +104,10 @@ export default {
       this.emitChange()
     },
 
+    changeTag(){
+      this.$store.dispatch('changeTag', this.item._id)
+    },
+
     updateTask() {
       const task = {
         _id: this.item._id,
@@ -110,6 +115,7 @@ export default {
         text: this.inputValue,
         isChecked: this.item.isChecked,
         image: this.item.image,
+        tag: this.item.tag,
         date: (this.currentDate =
           this.$store.getters['calendar/getCurrentDate']), //dayjs().format('DD-MM-YYYY'),
       }

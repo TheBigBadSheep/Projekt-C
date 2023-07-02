@@ -8,6 +8,7 @@ export const state = () => ({
   filter: 'all',
   editMode: false,
   currentDate: '',
+  tag: 0,
 })
 
 export const mutations = {
@@ -18,7 +19,12 @@ export const mutations = {
   CHANGE_FILTER(state, filter) {
     state.filter = filter
   },
-
+  CHANGE_TAG(state) {
+    state.tag += 1
+    if (state.tag > 3) {
+      state.tag = 0
+    }
+  },
   SET_TASKS(state, tasks) {
     state.items = tasks
   },
@@ -93,6 +99,7 @@ export const actions = {
         _rev: task._rev,
         text: task.text,
         image: task.image,
+        tag: task.tag,
         isChecked: !task.isChecked,
       })
 
@@ -117,9 +124,37 @@ export const actions = {
         _rev: task._rev,
         text: task.text,
         image: base64Data,
+        tag: task.tag,
         isChecked: task.isChecked,
       })
 
+      dispatch('fetchItems')
+    } catch (e) {
+      console.log(e)
+      return
+    }
+  },
+
+  async changeTag({ dispatch }, id) {
+    try {
+      const task = await LOCAL_TASKS.get(id)
+      let tagChange = task.tag
+      if (task.tag === 'Important' || task.tag == null) {
+        tagChange = 'Trivial'
+      } else if (task.tag === 'Trivial') {
+        tagChange = 'Normal'
+      } else if (task.tag === 'Normal') {
+        tagChange = 'Important'
+      }
+      const response = await LOCAL_TASKS.put({
+        _id: id,
+        date: task.date,
+        _rev: task._rev,
+        text: task.text,
+        image: task.image,
+        isChecked: task.isChecked,
+        tag: tagChange,
+      })
       dispatch('fetchItems')
     } catch (e) {
       console.log(e)
@@ -137,6 +172,7 @@ export const actions = {
         _rev: task._rev,
         text: task.text,
         image: null,
+        tag: task.tag,
         isChecked: task.isChecked,
       })
 
@@ -191,6 +227,15 @@ export const actions = {
     }
   },
 
+  async filterTag({ commit, dispatch }) {
+    try {
+      commit('CHANGE_TAG')
+      dispatch('fetchItems')
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
   async updateTask({ dispatch }, task) {
     try {
       const response = await LOCAL_TASKS.put(task)
@@ -208,6 +253,8 @@ export const getters = {
   showCheckBox: (state) => state.items.length > 0,
 
   allChecked: (state) => state.items.every((item) => item.isChecked),
+
+  getTag: (state) => state.tag,
 }
 
 const readFile = async (filePath) => {

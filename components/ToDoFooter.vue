@@ -65,6 +65,12 @@
             >
               Completed
             </button>
+            <button
+              class="text-xs sm:text-sm rounded-lg px-2 border-2 border-ToDo-LightGreen border-opacity-20s shadow-sm transition ease-in-out duration-200 z-30"
+              @click="filterTag()"
+            >
+              Tag
+            </button>
           </div>
           <div class="py-1">
             <span v-show="atLeastOneChecked">
@@ -94,6 +100,7 @@ export default {
     return {
       filter: 'all',
       areAllChecked: false,
+      tag: '',
     }
   },
 
@@ -102,9 +109,8 @@ export default {
       return this.items.filter((item) => !item.isChecked)
     },
     atLeastOneChecked() {
-      return this.itemsLeft.length !== this.items.length
+      return this.itemsLeft.length < this.items.length
     },
-
     allChecked() {
       return this.itemsLeft.length === 0
     },
@@ -124,6 +130,9 @@ export default {
       this.areAllChecked = !this.areAllChecked
       this.$store.dispatch('toggleAllTasks', this.areAllChecked)
     },
+    filterTag(){
+      this.$store.dispatch('filterTag')
+    }
   },
 }
 </script>
