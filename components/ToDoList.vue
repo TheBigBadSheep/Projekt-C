@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col space-y-8 justify-between">
+  <div class="h-screen flex flex-col space-y-8 justify-between sm:p-0 p-4">
     <div class="w-full flex flex-col space-y-8 items-center justify-center">
       <nuxt-link to="/calendar">
         <span class="w-full text-white text-8xl text-center">TODO</span>

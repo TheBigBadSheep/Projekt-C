@@ -2,6 +2,14 @@
   <footer v-show="items.length > 0">
     <div class="py-4 space-y-4">
       <div class="flex justify-center disable-select space-x-4">
+        <div class="sm:hidden block">
+          <span v-if="itemsLeft.length == 1"
+            >{{ itemsLeft.length }} Item left</span
+          >
+          <span v-if="itemsLeft.length != 1">
+            {{ itemsLeft.length }} Items left
+          </span>
+        </div>
         <span
           v-if="!allChecked"
           @click="toggleAllTasks"
@@ -22,16 +30,18 @@
         </button>
       </div>
       <div class="relative">
-        <div class="flex flex-row w-screen items-center justify-around">
+        <div
+          class="hidden sm:flex flex-row w-screen items-center justify-around"
+        >
           <span
             v-if="itemsLeft.length == 1"
-            class="fixed md:inset-x-14 text-xs sm:text-sm opacity-80 mt-5 sm:mt-0 -ml-3"
+            class="fixed inset-x-14 mt-0 -ml-3 text-sm opacity-80"
           >
             {{ itemsLeft.length }} Item left
           </span>
           <span
             v-if="itemsLeft.length != 1"
-            class="fixed md:inset-x-14 text-xs sm:text-sm opacity-80 mt-5 sm:mt-0 -ml-3"
+            class="fixed sm:inset-x-14 sm:mt-0 sm:-ml-3 text-xs sm:text-sm opacity-80"
           >
             {{ itemsLeft.length }} Items left
           </span>
@@ -107,7 +117,7 @@ export default {
         case 2:
           return 'bg-tag-normal'
         case 1:
-          return 'bg-gray-100'
+          return 'bg-tag-trivial'
         default:
           return 'bg-gray-200'
       }

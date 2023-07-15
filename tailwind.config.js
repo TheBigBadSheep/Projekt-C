@@ -16,8 +16,8 @@ module.exports = {
         },
         tag: {
           important: '#FF9BAD',
-          trivial: '#FFF',
           normal: '#FFE5A4',
+          trivial: '#83A5FF',
         },
       },
       boxShadow: {
