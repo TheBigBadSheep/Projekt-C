@@ -1,58 +1,99 @@
 <template>
-  <div class="bg-ToDo-Green h-screen overflow-hidden">
-    <header class="flex justify-center">
-      <p class="current-date"></p>
-      <div class="flex p-4 font-medium">
-        <button id="prev" @click="changeMonthLeft" class="p-4">
-          Prev. Month
+  <div
+    class="bg-gradient-to-br from-ToDo-gradient-purple to-ToDo-gradient-teal h-screen overflow-hidden p-10"
+  >
+    <div
+      class="relative bg-white rounded-xl w-full h-fit flex flex-col shadow-xl"
+    >
+      <span
+        class="absolute z-10 -left-2 -top-7 text-xl font-black text-green-200 drop-shadow"
+        >SELECT DATE</span
+      >
+      <div class="h-fit px-4 py-8 flex flex-row justify-around">
+        <button id="prev" @click="changeMonthLeft">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
+          </svg>
         </button>
-        <button id="next" @click="changeMonthRight" class="p-4">
-          Next Month
+        <button id="jumpBack" @click="jumpToCurrentMonthDate">
+          <span class="font-bold">
+            {{ monthLabel }}
+            <span class="font-normal">{{ currentYear }}</span></span
+          >
         </button>
-        <button id="jumpBack" @click="jumpToCurrentMonthDate" class="p-4">
-          Current Month
+
+        <button id="next" @click="changeMonthRight">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 4.5l7.5 7.5-7.5 7.5"
+            />
+          </svg>
         </button>
-        <div class="p-4">{{ currentMonth }} / {{ currentYear }}</div>
       </div>
-    </header>
-    <div class="grid grid-cols-7 content-evenly sm:h-full h-4/5 sm:px-0 px-5 sm:space-x-5">
-      <div v-for="index in monthDays" :key="index" class="text-center">
-        <NuxtLink
-          :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear"
-        >
-          <div
-            class="py-5 h-full w-full hover:bg-green-100 rounded-lg flex flex-col"
-            :class="
-              index === currentDay &&
-              currentYear === savedDate[2] &&
-              currentMonth === savedDate[1]
-                ? 'bg-blue-500'
-                : ''
-            "
-            @click="
-              saveDateInStore(index + '-' + currentMonth + '-' + currentYear)
-            "
+      <div class="grid grid-cols-7 p-4 gap-2">
+        <div v-for="index in monthDays" :key="index">
+          <NuxtLink
+            :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear"
           >
             <div
+              class="w-full p-2.5 rounded-xl bg-white hover:bg-gray-100 border border-gray-100 hover:shadow-sm transition ease-in-out duration-100"
               :class="
-                checkForDateInStore(
-                  index + '-' + currentMonth + '-' + currentYear
-                ) === true
-                  ? 'opacity-100 place-self-center'
-                  : 'opacity-0'
+                index === currentDay &&
+                currentYear === savedDate[2] &&
+                currentMonth === savedDate[1]
+                  ? 'border-2 border-green-400 shadow-md'
+                  : ''
+              "
+              @click="
+                saveDateInStore(index + '-' + currentMonth + '-' + currentYear)
               "
             >
-              <div class="h-3 w-3 rounded-full bg-green-800"></div>
+              <div class="flex flex-col justify-between h-24 pb-4">
+                <span class="font-bold text-sm">{{ index }}</span>
+                <div
+                  :class="
+                    checkForDateInStore(
+                      index + '-' + currentMonth + '-' + currentYear
+                    ) === true
+                      ? 'opacity-100 place-self-center'
+                      : 'opacity-0'
+                  "
+                >
+                  <div
+                    class="h-5 w-5 rounded-full shadow-2xl bg-gray-600"
+                  ></div>
+                </div>
+              </div>
             </div>
-            {{ index }}
-          </div>
-        </NuxtLink>
+          </NuxtLink>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import dayjs from 'dayjs'
 export default {
   components: {},
 
@@ -89,6 +130,11 @@ export default {
     monthDays() {
       return this.daysInMonth
     },
+    monthLabel() {
+      return dayjs()
+        .month(this.currentMonth - 1)
+        .format('MMMM')
+    },
   },
 
   methods: {
@@ -105,8 +151,8 @@ export default {
       } else {
         x = 31
       }
-      if (this.currentMonth === 2 && this.currentYear%2!==0) x = 28
-      if (this.currentMonth === 2 && this.currentYear%2===0) x = 29
+      if (this.currentMonth === 2 && this.currentYear % 2 !== 0) x = 28
+      if (this.currentMonth === 2 && this.currentYear % 2 === 0) x = 29
       this.daysInMonth = x
     },
     changeMonthLeft() {
@@ -124,11 +170,11 @@ export default {
       if (this.currentMonth === 12) {
         this.currentMonth = 1
         this.currentYear += 1
-      //  console.log(this.currentMonth)
+        //  console.log(this.currentMonth)
         this.renderCalendar()
       } else {
         this.currentMonth += 1
-      //  console.log(this.currentMonth)
+        //  console.log(this.currentMonth)
         this.renderCalendar()
       }
     },

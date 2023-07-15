@@ -4,18 +4,20 @@ module.exports = {
   theme: {
     extend: {
       fontSize: {
-        'null': '0rem',
+        null: '0rem',
       },
       colors: {
         ToDo: {
           Green: '#CEDCBC',
           LightGreen: '#DAF1BC',
-          DarkGreen: '#9CB08D'
-        }
+          DarkGreen: '#9CB08D',
+          'gradient-purple': '#A8A1F9',
+          'gradient-teal': '#CDFFDD',
+        },
       },
       boxShadow: {
         'inner-xl': 'inset 0 -18px 12px -15px rgba(0, 0, 0, 0.1)',
-      }
+      },
     },
   },
   variants: {
