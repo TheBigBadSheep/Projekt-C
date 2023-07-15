@@ -1,12 +1,12 @@
 <template>
   <div
-    class="bg-gradient-to-br from-ToDo-gradient-purple to-ToDo-gradient-teal h-screen overflow-hidden p-10"
+    class="bg-gradient-to-br from-ToDo-gradient-purple to-ToDo-gradient-teal h-screen overflow-hidden pt-10 px-4 sm:p-10"
   >
     <div
       class="relative bg-white rounded-xl w-full h-fit flex flex-col shadow-xl"
     >
       <span
-        class="absolute z-10 -left-2 -top-7 text-xl font-black text-green-200 drop-shadow"
+        class="absolute hidden sm:block z-10 -left-2 -top-7 text-xl font-black text-green-200 drop-shadow"
         >SELECT DATE</span
       >
       <div class="h-fit px-4 py-8 flex flex-row justify-around">
@@ -50,7 +50,7 @@
           </svg>
         </button>
       </div>
-      <div class="grid grid-cols-7 p-4 gap-2">
+      <div class="grid grid-cols-7 p-4 sm:gap-2 gap-1">
         <div v-for="index in monthDays" :key="index">
           <NuxtLink
             :to="'/calendar/' + index + '-' + currentMonth + '-' + currentYear"
@@ -68,7 +68,7 @@
                 saveDateInStore(index + '-' + currentMonth + '-' + currentYear)
               "
             >
-              <div class="flex flex-col justify-between h-24 pb-4">
+              <div class="flex flex-col justify-between h-12 sm:h-24 sm:pb-4">
                 <span class="font-bold text-sm">{{ index }}</span>
                 <div
                   :class="
@@ -80,7 +80,7 @@
                   "
                 >
                   <div
-                    class="h-5 w-5 rounded-full shadow-2xl bg-gray-600"
+                    class="h-2 w-2 sm:h-5 sm:w-5 rounded-full shadow-2xl bg-gray-600"
                   ></div>
                 </div>
               </div>
