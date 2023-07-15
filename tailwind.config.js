@@ -14,6 +14,11 @@ module.exports = {
           'gradient-purple': '#A8A1F9',
           'gradient-teal': '#CDFFDD',
         },
+        tag: {
+          important: '#FF9BAD',
+          trivial: '#FFF',
+          normal: '#FFE5A4',
+        },
       },
       boxShadow: {
         'inner-xl': 'inset 0 -18px 12px -15px rgba(0, 0, 0, 0.1)',

@@ -1,24 +1,39 @@
 <template>
-  <div>
-    <ToDoInputField
-      :show-check-box="showCheckBox"
-      :all-checked="allChecked"
-      class=""
-    />
+  <div class="h-screen flex flex-col space-y-8 justify-between">
+    <div class="w-full flex flex-col space-y-8 items-center justify-center">
+      <nuxt-link to="/calendar">
+        <span class="w-full text-white text-8xl text-center">TODO</span>
+      </nuxt-link>
+      <ToDoInputField
+        :show-check-box="showCheckBox"
+        :all-checked="allChecked"
+        class=""
+      />
+    </div>
 
-    <div>
-      <transition-group name="list">
+    <div class="relative grow h-full overflow-y-scroll overflow-x-hidden pt-8">
+      <div
+        v-if="modalImage"
+        class="z-50 fixed inset-0 h-full w-full flex justify-center items-center bg-black/50"
+        @click="modalImage = null"
+      >
+        <div class="w-80 p-4 bg-white rounded-2xl">
+          <img
+            :src="modalImage"
+            class="object-cover rounded-2xl w-full h-full"
+          />
+        </div>
+      </div>
+      <transition-group name="list" class="z-40 space-y-12">
         <ToDoListItem
           v-for="item in filteredTasks"
-          v-if="item._id"
           :key="item._id"
           :item="item"
-          class="px-3 mb-5"
+          @modal="onOpenImageModal"
         />
       </transition-group>
-
-      <ToDoFooter :items="items" />
     </div>
+    <ToDoFooter class="shrink-0" :items="items" />
   </div>
 </template>
 
@@ -31,6 +46,7 @@ export default {
   data() {
     return {
       currentDate: null,
+      modalImage: null,
     }
   },
   beforeMount() {
@@ -42,6 +58,12 @@ export default {
     ToDoInputField,
     ToDoListItem,
     ToDoFooter,
+  },
+
+  methods: {
+    onOpenImageModal(image) {
+      this.modalImage = image
+    },
   },
 
   computed: {
@@ -153,5 +175,26 @@ export default {
 .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateX(20px);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #b4adff;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #c2bdff;
 }
 </style>
