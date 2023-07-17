@@ -6,7 +6,7 @@
       class="relative bg-white rounded-xl w-full h-fit flex flex-col shadow-xl"
     >
       <span
-        class="absolute hidden sm:block z-10 -left-2 -top-7 text-xl font-black text-green-200 drop-shadow"
+        class="font-lemon absolute hidden sm:block z-10 -left-2 -top-7 text-xl text-white drop-shadow"
         >SELECT DATE</span
       >
       <div class="h-fit px-4 py-8 flex flex-row justify-around">
