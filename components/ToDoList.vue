@@ -2,7 +2,9 @@
   <div class="h-screen flex flex-col space-y-8 justify-between sm:p-0 p-4">
     <div class="w-full flex flex-col space-y-8 items-center justify-center">
       <nuxt-link to="/calendar">
-        <span class="w-full text-white text-8xl text-center">TODO</span>
+        <span class="font-lemon w-full text-white text-8xl text-center"
+          >TODO</span
+        >
       </nuxt-link>
       <ToDoInputField
         :show-check-box="showCheckBox"
