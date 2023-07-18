@@ -13,6 +13,7 @@ module.exports = {
           DarkGreen: '#9CB08D',
           'gradient-purple': '#A8A1F9',
           'gradient-teal': '#CDFFDD',
+          dots: '#53c1a8',
         },
         tag: {
           important: '#FF9BAD',

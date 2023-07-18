@@ -4,7 +4,7 @@
       v-model="item"
       class="w-full sm:text-2xl text-lg px-4 pr-32 bg-white py-3 rounded-lg placeholder-gray-500 text-gray-900 italic-font focus:outline-none sm:py-2"
       type="text"
-      placeholder="Add tasks to ToDo List and press enter"
+      placeholder="Add tasks to ToDo List"
       @keypress.enter="addItem"
     />
     <svg

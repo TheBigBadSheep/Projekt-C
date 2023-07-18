@@ -80,7 +80,7 @@
                   "
                 >
                   <div
-                    class="h-2 w-2 sm:h-5 sm:w-5 rounded-full shadow-2xl bg-gray-600"
+                    class="h-2 w-2 sm:h-5 sm:w-5 rounded-full shadow-2xl bg-ToDo-dots"
                   ></div>
                 </div>
               </div>
