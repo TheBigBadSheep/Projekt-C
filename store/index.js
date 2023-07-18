@@ -114,7 +114,9 @@ export const actions = {
     try {
       const task = await LOCAL_TASKS.get(id)
 
-      const image = await Camera.getPhoto({})
+      const image = await Camera.getPhoto({
+        resultType: 'uri',
+      })
       const imageData = await readFile(image.webPath)
       const base64Data = await convertToBase64(imageData)
 
