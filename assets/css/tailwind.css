@@ -13,3 +13,57 @@
   font-weight: 400;
   src: url('../fonts/Lemon-Regular.ttf');
 }
+
+@media (max-width: 991px) {
+  * {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
+    -webkit-focus-ring-color: rgba(255, 255, 255, 0) !important;
+    outline: none !important;
+  }
+
+  html {
+    height: 100vh;
+    width: 100vw;
+    background-color: #ffffff;
+    overscroll-behavior-y: none;
+    scroll-behavior: smooth;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    scroll-padding: 0;
+  }
+
+  #app {
+    height: 100%;
+    width: 100%;
+  }
+
+  html,
+  body {
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    touch-action: manipulation;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h5,
+  h6,
+  p,
+  a,
+  button,
+  span {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                      supported by Chrome, Opera and Firefox */
+  }
+}
