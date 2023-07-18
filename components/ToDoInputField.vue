@@ -88,7 +88,9 @@ export default {
       this.$store.dispatch('checkAllToDos')
     },
     async addImage() {
-      const image = await Camera.getPhoto({})
+      const image = await Camera.getPhoto({
+        resultType: 'uri',
+      })
       const imageData = await this.readFile(image.webPath)
       const base64Data = await this.convertToBase64(imageData)
       const task = {
