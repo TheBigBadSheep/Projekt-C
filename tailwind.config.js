@@ -24,6 +24,10 @@ module.exports = {
         'inner-xl': 'inset 0 -18px 12px -15px rgba(0, 0, 0, 0.1)',
       },
     },
+    fontFamily: {
+      sans: ['Inter Regular'],
+      lemon: ['Lemon Regular'],
+    },
   },
   variants: {
     extend: {},
